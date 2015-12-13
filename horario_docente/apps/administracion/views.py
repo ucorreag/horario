@@ -201,15 +201,15 @@ def cambiarPassword(request):
         return render_to_response('CambiarPassword.html',context_instance = RequestContext(request))
         
  #crear carreras
- @login_required
- def lista_carreras(request):
-     carreras=Carrera.objects.all()
-     if request.POST:
-         nombre=request.POST['nombre']
-         carrera=Carrera(nombre)
-         carrera.save()
+@login_required
+def lista_carreras(request):
+    carreras=Carrera.objects.all()
+    if request.POST:
+        nombre=request.POST['nombre']
+        carrera=Carrera(nombre=nombre)
+        carrera.save()
     
-     return render_to_response('Lista_carreras.html',{'carreras':carreras},RequestContext(request))
+    return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
      
          
          
