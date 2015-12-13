@@ -11,9 +11,8 @@ from django.core.urlresolvers import reverse_lazy
 def index_view(request):
 
     Planificador=Group.objects.filter(name="Planificador")
-    Estudiante=Group.objects.filter(name="Estudiante")
     Profesor=Group.objects.filter(name="Profesor")
-    if str(Planificador) == "[]" and str(Estudiante)=="[]" and str(Profesor)=="[]":
+    if str(Planificador) == "[]" and str(Profesor)=="[]":
         g=Group()
         for i in range(4):
             if i == 1:
@@ -22,13 +21,9 @@ def index_view(request):
                 g.save()
             if i == 2:
                 g=Group()
-                g.name="Estudiante"
-                g.save()
-            if i == 3:
-                g=Group()
                 g.name="Profesor"
                 g.save()
-
+            
         grupos = Group.objects.filter(id=1)
         user=User.objects.get(id=1)
         user.groups=grupos

@@ -16,7 +16,7 @@
 </head>
 <body>
       <div class="modal-header">
-	 {% if   user.groups.get.id == 1 %}
+	 {% if   user.is_active and user.is_superuser %}
         {%include 'planificador.html' %}
        {% endif %}
        </div>

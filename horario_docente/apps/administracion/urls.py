@@ -7,7 +7,10 @@ urlpatterns = [
     url(r'detalles/(?P<id>\d+)/$','apps.administracion.views.user_detail',name='usuario'),
     url(r'eliminar_usuario/(?P<id>\d+)/$','apps.administracion.views.user_delete',name='eliminar'),
     url(r'crear_usuario/$','apps.administracion.views.user_create', name='crear_usuario'),
-    url(r'administracion/actualizar_usuario/(?P<id>\d+)/$','apps.administracion.views.user_update',name='actualizar'),
+    url(r'actualizar_usuario/(?P<id>\d+)/$','apps.administracion.views.user_update',name='actualizar'),
     url(r'CambiarPassword/$', 'apps.administracion.views.cambiarPassword',name='CambiarPassword'),
-      
+    url(r'lista_carreras/$','apps.administracion.views.lista_carreras', name='lista_carreras'),
+    
+    
+     
 	]

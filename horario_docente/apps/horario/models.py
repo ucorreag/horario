@@ -16,11 +16,14 @@ class Curso(models.Model):
 		return 	self.desde+"|"+self.hasta
 		
 class Carrera(models.Model):
-	id_curso=models.ForeignKey(Curso)
 	nombre=models.CharField(max_length=100, verbose_name="Carrera")
 	
 	def __str__(self):
 		return self.nombre
+		
+class CarreraCurso(models.Model):
+	id_curso=models.ForeignKey(Curso)
+	id_carrera=models.ForeignKey(Carrera)
 
 #1°, 2°, 3°...
 class Año(models.Model):
