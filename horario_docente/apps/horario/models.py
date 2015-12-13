@@ -70,9 +70,17 @@ class Asignatura(models.Model):
 	def __str__(self):
 		return self.nombre+"|"+self.tipo
 
+<<<<<<< HEAD
+class Curso(models.Model):
+    nombre = models.CharField(max_length=25)
+    
+    def __str__(self):
+        return self.nombre
+=======
 class Turno(models.Model):
 	id_dia=models.ForeignKey(Dia)
 	id_asignatura=models.ForeignKey(Asignatura)
 	turno=models.CharField(max_length=10,choices=(('1','primero'),('2','segundo'),('3','tercero'),('4','cuarto'),('5','quinto'),('6','sexto')))
 	
 	
+>>>>>>> origin/master
