@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+ .margen{
+     margin-right: 5%;
+     margin-left: 5%;
+
+ }
+</style>
+<div class="well pull-rigth">
+    <div class="panel panel-default">
+
+               <nav class="navbar navbar-inverse theme_border">
+                       <div class="form-horizontal">
+                           <h4 class="text-center" style="color: #f6faff">
+                                          {{p}}
+                              
+                           </h4>
+                       </div>
+                   </nav>
+                    <br>
+
+<div class="margen">
+    <table class="table table-details">
+        <tr>
+            <th>Usuario:</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Nombre (s):</th>
+            <td>{{ user.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Apellidos:</th>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Correo Web:</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>Rol:</th>
+            <td>{{ user.groups.get }}</td>
+        </tr>
+
+    </table>
+
+    <div class="row" style="margin-top: 15px">
+        <div class="col-md-12" style="text-align: center">
+
+            <a class="btn btn-default" href="{% url 'lista_usuarios'%}">
+                <span class="glyphicon glyphicon-chevron-left"> </span>
+                Atrás
+            </a>
+        </div>
+    </div>
+    <br>
+    <br>
+    </div>      </div>
+ </div>                     
+
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

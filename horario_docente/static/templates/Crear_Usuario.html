@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 {% block content %}
     <div class="panel panel-default">
-   <nav class="navbar navbar-inverse">
+   <nav class="navbar navbar-inverse theme_border">
         <div class="form-horizontal" >
                <h4 class="text-center" style="color: #f6faff">
                                           {{p}}
-                <a data-toggle="modal" href="#" class="btn">
-                 <span class="glyphicon glyphicon-exclamation-sign"> </span>
-                 </a>
+                
                  </h4>
          </div>
     </nav>
             <form class="form-horizontal" rol="form" method="post" action="" style="padding-left: 20%;padding-right: 20%;">{% csrf_token %}
 
               <div class="col-md-12">
-                <label>Nombre</label>
-                <input type="text" name="first_name" placeholder="Nombre" class="form-control" value="{{ first_name }}"/><br>
+                <label>Nombres:</label>
+                <input type="text" name="first_name" placeholder="Nombre" class="entrada form-control" value="{{ first_name }}"/><br>
             </div>
 
             <div class="col-md-12">
-                         <label>Apellidos</label>
-                         <input type="text" name="last_name" placeholder="Apellidos" class="form-control" value="{{ last_name }}"/>
+                         <label>Apellidos:</label>
+                         <input type="text" name="last_name" placeholder="Apellidos" class="form-control entrada" value="{{ last_name }}"/>
             </div>
-
-            <div class="col-md-12"><br>
-                          <label>Nombre de usuario</label>
-                          <input type="text" name="username" placeholder="Nombre de usuario" class="form-control" required="required" value="{{ username }}"/>
+            
+            <div class="col-md-12">
+                          <label>Nombre de usuario:</label>
+                          <input type="text" name="username" placeholder="Nombre de usuario" class="form-control entrada" required="required" value="{{ username }}"/>
              </div>
+             
+            <div class="col-md-12">
+                         <label>Correo web:</label>
+                         <input type="text" name="email" placeholder="usuario@uho.edu.cu" class="form-control entrada" value="{{ email }}"/>
+            </div><br>
+
+            
              <div class="col-md-12"><br>
-                <label>Rol</label>
+                <label>Rol:</label>
                 <select name="role" class="form-control">
                     {% for rolevalue, rolename in roles %}
                         {% if role == rolevalue %}
@@ -42,23 +46,17 @@
             </div>
 
                      <div class="col-md-12"><br>
-                <label>Contraseña</label>
-                <input type="password" name="" placeholder="Contraseña" class="form-control" required="required" data-name="password"/><br>
+                <label>Contraseña:</label>
+                <input type="password" name="" placeholder="Contraseña" class="form-control entrada" required="required" id="password"/><br>
             </div>
 
                      <div class="col-md-12">
-                <label>Repita la contraseña</label>
-                <input type="password" name="password" placeholder="Repita la contraseña" class="form-control" required="required" data-name="repassword"/><br>
+                <label>Repita la contraseña:</label>
+                <input type="password" name="password" placeholder="Repita la contraseña" class="form-control entrada" required="required" id="repassword"/><br>
                 <div class="local-error" style="visibility: hidden;" id="message-pass-error"> Las contraseñas no coinciden</div>
             </div>
 
-                     <div class="col-md-12">
-                <label>¿Desea Cambiar el correo?</label><br>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary {% if mobile_user %} active {% endif %}">
-                        <input type="checkbox" name="mobile_user" data-name="mobile_user">Si
-                    </label>
-                </div>
+                
 
             </div>
 
@@ -68,21 +66,34 @@
                     <span class="glyphicon glyphicon-plus"></span>
                     Crear
                 </button>
-                <a class="btn btn-default" href="/administrador/lista_usuario/">
+                <a class="btn btn-default" href="{% url 'lista_usuarios'%}">
                     <span class="glyphicon glyphicon-chevron-left"></span>
                     Atrás
                 </a>
-                                       </div>
-                                          </div><!--/span-->
+            </div>
+          </div><!--/span-->
 <br>
-                                   </form>
-                                </div>
+ </form>
+</div>
                           
-    <br> <br>
+ <br> <br>
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" >
-
+<script>
+jQuery(function($){    
+    
+    $('#repassword').focusout(function(){  
+        var $pass = $('#password').val();
+        var $repass = $('#repassword').val();      
+        if($pass!=$repass){
+          $('#message-pass-error').attr('style','visibility: visible; color:red;'); 
+        }else{
+            $('#message-pass-error').attr('style','visibility: hidden;'); 
+        }
+        
+   
+    });
+});
 </script>
 {% endblock %}

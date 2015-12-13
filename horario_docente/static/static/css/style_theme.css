@@ -1,0 +1,9 @@
+.theme_border{
+	border:0px;
+	box-shadow: 4px 4px 4px gray;
+}
+
+input.entrada{
+	height:30px;
+	
+}

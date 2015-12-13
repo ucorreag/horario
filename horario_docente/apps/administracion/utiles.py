@@ -8,7 +8,7 @@ def login_required(function):
     def wrapper(*args):
         request = args[0]
         if not request.user.is_authenticated():
-            return HttpResponseRedirect(reverse('login/'))
+            return HttpResponseRedirect(reverse('login'))
         else:
             return function(*args)
     return wrapper

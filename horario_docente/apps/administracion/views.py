@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import  User,Group
 from django.views.generic.edit import CreateView
 from django.views.generic import FormView
+from django.core.urlresolvers import reverse
 
 
 
@@ -45,18 +46,18 @@ def login(request):
 @login_required
 def logout(request):
     django_logout(request)
-    return HttpResponseRedirect('/administracion/login/')
+    return HttpResponseRedirect(reverse('home'))
 #Detalles de Usuarios
 
 def user_detail(request,id):
 
-    user = User.objects.filter(id=id)
+    user = User.objects.get(id=id)
 
     return render_to_response(
         'Detalles_Usuario.html',
         {
             'p': _('Detalles del Usuario'),
-            'user':user[0],
+            'user':user,
             },
         RequestContext(request)
     )
@@ -71,7 +72,8 @@ def user_create(request):
         username = request.POST['username']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        role = int(request.POST['role'])
+        email = request.POST['email']
+        role = int(request.POST['role'])        
         password = request.POST['password']
 
                 
@@ -81,12 +83,13 @@ def user_create(request):
             context['username'] = username
             context['first_name'] = first_name
             context['last_name'] = last_name
+            context['email'] = email
             context['role'] = role
            
         else:
                 g=Group.objects.filter(id=role)
 
-                user= User.objects.create_user(username, username+'@uho.cu',  password)
+                user= User.objects.create_user(username, email,  password)
                 user.first_name= first_name
                 user.last_name = last_name
                 user.is_staff=True
@@ -112,60 +115,47 @@ def user_create(request):
 
 def user_update(request,id):
     use=User.objects.get(id=id)
-    if use.groups==1:
-        #IMPLEMNTAR
-        user=User.objects.filter(id=id)
-        #users = get_object_or_404(User, pk=id)
-        if request.GET:
-            username = request.GET['username']
-            first_name = request.GET['first_name']
-            last_name = request.GET['last_name']
-            role = int(request.GET['role'])
-            password = request.GET['password']
-            user.delete()
-            g=Group.objects.filter(id=role)
-            user= User.objects.create_user(username, username+'@uho.edu.cu',  password)
-            user.first_name= first_name
-            user.last_name = last_name
-            user.is_staff=True
-            user.groups=g
-            user.role=role
-            if role==1:
-                user.is_superuser=True
-            user.save()
-            
-            return HttpResponseRedirect('/administracion/lista_usuarios/')
-        else:   
-            return render_to_response(
-            'Modificar_Usuario.html',
+    #IMPLEMNTAR
+    
+    #users = get_object_or_404(User, pk=id)
+    if request.GET:
+        username = request.GET['username']
+        first_name = request.GET['first_name']
+        last_name = request.GET['last_name']
+        role = int(request.GET['role'])
+        password = request.GET['password']
+        print(role)
+        gr=Group.objects.filter(id=role)
+        use.first_name= first_name
+        use.last_name = last_name
+        use.is_staff=True
+        use.groups=gr
+        use.role=role
+        if role==1:
+            use.is_superuser=True
+        use.save()
+        return HttpResponseRedirect('/administracion/lista_usuarios/')
+    
+    else:
+        return render_to_response(
+             'Modificar_Usuario.html',
             {
-                'p': _('Actualizar Usuario ' +user.get().username+''),
-                'usuario':user,
+                'p': _('Actualizar Usuario ' +use.username+''),
+                'usuario':use,
                 'roles': USER_ROLES,
                 },
             RequestContext(request)
         )
-        user_create()
-    else:
-        return HttpResponseRedirect('/')
+           
    
 #Eliminar Usuarios
 def user_delete(request,id):
     actual = request.META.get('HTTP_REFERER', None) or '/'
-
-    try:
-        e= User.objects.filter(id=id)
-        e.delete()
-        return HttpResponseRedirect(actual)
-    except ObjectDoesNotExist:
-        error_msg = "El sujeto no existe."
-    return render_to_response(
-         'Eliminar.html',
-         {
-             'page_title': _('Eliminar Usuario #'),
-         },
-         RequestContext(request)
-    )
+    e= User.objects.filter(id=id)
+    e.delete()
+    return HttpResponseRedirect(actual)
+    
+   
 def user_list(request):
     users = User.objects.all()
     paginator = Paginator(users, 5)
@@ -181,66 +171,24 @@ def user_list(request):
     return render_to_response(
          'Lista_usuario.html',
          {
-             'page_title': _('Eliminar Usuario #'),
-
+             
              'contacts':contacts,
          },
          RequestContext(request)
     )
 
-def cambiarPasswordProfesor(request,aprobado = ""):
+def cambiarPassword(request):
 
     if request.method == "POST":
-        form = passwordForm(request.POST,request.FILES)
-        if form.is_valid():
-                password = form.cleaned_data['password']
-                usuario = request.user
-                usuario.password = password
-                usuario.set_password(form.cleaned_data['password'])
-                usuario.save()
-                return HttpResponseRedirect('/')
-                
-                
-                form = passwordForm()
-                ctx = {'form':form}
-                return render_to_response('CambiarPasswordP.html',ctx,context_instance = RequestContext(request))
-        else:
-            form = passwordForm()
-            ctx = {'form':form,'aprobado':aprobado}
-            return render_to_response('CambiarPasswordP.html',ctx,context_instance = RequestContext(request))
+        password = request.POST['password']
+        usuario = request.user
+        usuario.password = password
+        usuario.set_password(password)
+        usuario.save()
+        return HttpResponseRedirect(reverse('login'))
+        
     else:
-        form = passwordForm()
-        ctx = {'form':form,'aprobado':aprobado}
-        return render_to_response('CambiarPasswordP.html',ctx,context_instance = RequestContext(request))
-
-
-
-   
-def cambiarPasswordEstudiante(request,aprobado = ""):
-
-    if request.method == "POST":
-        form = passwordForm(request.POST,request.FILES)
-        if form.is_valid():
-                password = form.cleaned_data['password']
-                usuario = request.user
-                usuario.password = password
-                usuario.set_password(form.cleaned_data['password'])
-                usuario.save()
-                return HttpResponseRedirect('/')
-                
-                
-                form = passwordForm()
-                ctx = {'form':form,'aprobado':aprobado}
-                return render_to_response('CambiarPasswordE.html',ctx,context_instance = RequestContext(request))
-        else:
-            form = passwordForm()
-            ctx = {'form':form,'aprobado':aprobado}
-            return render_to_response('CambiarPasswordE.html',ctx,context_instance = RequestContext(request))
-    else:
-        form = passwordForm()
-        ctx = {'form':form,'aprobado':aprobado}
-        return render_to_response('CambiarPasswordE.html',ctx,context_instance = RequestContext(request))
-  
- 
- 
+        
+        return render_to_response('CambiarPassword.html',context_instance = RequestContext(request))
+        
  
