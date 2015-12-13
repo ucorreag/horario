@@ -1,5 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="es">
     <head>
             <meta charset="UTF-8">
@@ -12,22 +13,48 @@
                {% block style%}{%endblock%}
 
              <script src="{% static 'js/jquery.js' %}"></script>
+=======
+<html lang="esp">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	
+	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
+      <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+      <link href="{% static 'css/normalize.css' %}" rel="stylesheet">  
+      <link rel="stylesheet" href="{% static 'css/style_theme.css'%}"> 
+	   {% block style%}{%endblock%}
+	          
+     <script src="{% static 'js/jquery.js' %}"></script>	
+>>>>>>> origin/master
 	
     </head>
 <body>
-	 
+      <div class="modal-header">
+	 {% if   user.is_active and user.is_superuser %}
+        {%include 'planificador.html' %}
+       {% endif %}
+       </div>
+       <br>
+       <div class="modal-body">
       {% block content %}
-      {% if user.groups.get.id == 2 %}
       
-      {%endif %}
       {% endblock %}
+      </div>
       </section>       
-
+     <script src="{% static 'js/modernizr-2.0.6.min.js'%}"></script>
+     <script src="{% static 'js/bootstrap.js' %}"></script>
+     
      
       {% block js %}{% endblock %} 
+<<<<<<< HEAD
 	  
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
         {% block footer %}{% endblock %}
 
+=======
+	 
+      
+>>>>>>> origin/master
 </body>
 </html>
