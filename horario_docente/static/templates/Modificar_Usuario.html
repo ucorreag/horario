@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+            <div class="panel panel-default">
+                <nav class="navbar navbar-inverse theme_border">
+                       <div class="form-horizontal">
+                           <h4 class="text-center" style="color: #f6faff">
+                                          {{p}}
+                               
+                           </h4>
+                       </div>
+                   </nav>
+
+                    <br>
+             <form class="form-horizontal"  method="get" id="form"> {% csrf_token %}
+		            <div class="col-md-12">
+		                <label>Nombre</label>
+		                <input type="text" name="first_name" placeholder="" class="form-control entrada" value="{{ usuario.first_name }}"/><br>
+		            </div>
+
+                     <div class="col-md-12">
+                         <label>Apellidos</label>
+                         <input type="text" name="last_name" placeholder="" class="form-control entrada" value="{{usuario.last_name }}"/>
+                     </div>
+
+                     <div class="col-md-12"><br>
+                          <label>Nombre de usuario</label>
+                          <input type="text" name="username" placeholder="Nombre de usuario" class="form-control entrada" required="required" value="{{ usuario.username }}"/>
+                    </div>
+
+                     <div class="col-md-12"><br>
+                <label>Rol</label>
+                <select name="role" class="form-control">
+                    {% for rolevalue, rolename in roles %}
+                    
+                        {% if rolevalue == usuario.groups.get.id %}
+                           <option value="{{ rolevalue }}" selected="selected">{{ rolename }}</option>
+                        {% else %}
+                            <option value="{{ rolevalue }}">{{ rolename }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+                     <div class="col-md-12"><br>
+                <label>Contraseña</label>
+                <input type="password" name="" placeholder="Contraseña" class="form-control entrada" required="required" id="password"/><br>
+            </div>
+
+                     <div class="col-md-12">
+                <label>Repita la contraseña</label>
+                <input type="password" name="password" placeholder="Repita la contraseña" class="form-control entrada" required="required" id="repassword"/><br>
+                <div class="local-error" style="visibility: hidden;" id="message-pass-error"> Las contraseñas no coinciden</div>
+            </div>
+
+
+
+          <div class="col-md-12" style="text-align: center">
+            <button type="submit" class="btn btn-default" style="margin-right: 20px" id="btn-create">
+                <span class="glyphicon glyphicon-edit"> </span>
+                Modificar
+            </button>
+            <a class="btn btn-default" href="{% url 'lista_usuarios'%}">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                Atrás
+            </a>
+        </div>
+
+    </form>
+
+    <div class="row" style="margin-top: 15px">
+
+    <br>
+    <br>
+              </div>      </div>
+                          </div>
+                       </div>
+        
+</div>
+{% endblock %}
+<script>
+jQuery(function($){    
+    
+    $('#repassword').focusout(function(){  
+        var $pass = $('#password').val();
+        var $repass = $('#repassword').val();      
+        if($pass!=$repass){
+          $('#message-pass-error').attr('style','visibility: visible; color:red;'); 
+        }else{
+            $('#message-pass-error').attr('style','visibility: hidden;'); 
+        }
+        
+   
+    });
+});
+</script>
+
+{% block js %}
+
+{% endblock %}
