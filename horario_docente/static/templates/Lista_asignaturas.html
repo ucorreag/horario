@@ -1,0 +1,76 @@
+{% extends 'base.html'%}
+{% block content %}
+ <div class="panel panel-default">
+   <nav class="navbar navbar-inverse theme_border">
+        <div class="form-horizontal" >
+               <h4 class="text-center" style="color: #f6faff">
+                                         Lista de Asignaturas
+                
+                 </h4>
+         </div>
+    </nav>
+	           
+	<div style="padding-left:20px;padding-right:20px;">						
+		
+		
+		<h3>{{carrera.nombre}}</h3> 
+		
+		    
+			<table class="table" >
+				<tr class="active"><th colspan="2">
+				
+				
+				<div class="btn-group col-lg-3">
+					<a href="#" onclick="return false;" class=" btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="
+                    glyphicon glyphicon-th-list"  aria-hidden="true" ></span>
+					</a>
+					<ul class="dropdown-menu">
+						{%for año in carrerasaños%}
+						<li>
+							<a href="#">{{año.id_año.nombre}}</a>
+							<ul>
+								<li><a href="#">Primer Semestre</a></li>
+								<li><a href="#">Segundo Semestre</a></li>
+							</ul>
+						</li>	
+						{% endfor %}
+					</ul>
+					</div>
+					<h4 class="col-lg-3">año</h4><h5 class="col-lg-3">semestre</h5>				
+					<a href="#" class="btn glyphicon glyphicon-plus col-lg-3"> Añadir Asignatura</a>
+					</th></tr>
+					<tr><td >
+					
+										
+					
+				</td></tr>
+						
+					</table>
+					
+					
+					
+				</td></tr>
+				
+			</table><br><br>
+				
+		
+		
+		
+	</div>
+	
+	
+</div>
+{% endblock %}
+
+ {% block extra_js %}
+ <script>
+	 jQuery(function($){
+		 
+		 
+		 
+	 });	 
+	 
+ </script> 
+ 
+ {% endblock%}
