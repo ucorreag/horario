@@ -208,8 +208,24 @@ def lista_carreras(request):
         nombre=request.POST['nombre']
         carrera=Carrera(nombre=nombre)
         carrera.save()
+        
+        año=Año.objects.all()
+        for an in año:
+            m=CarreraAño(id_carrera=carrera, id_año=an)
+            m.save()
     
     return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
      
-         
+def lista_asignaturas(request, id):
+    carrera=Carrera.objects.get(id=id)
+    carann=CarreraAño.objects.filter(id_carrera=carrera.id)
+    return render_to_response('Lista_asignaturas.html',{'carrerasaños':carann,'carrera':carrera},RequestContext(request))
+    
+def eliminar_carrera(request,id):
+    carrera=Carrera.objects.get(id=id)
+    carrera.delete()
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)              
+        
          

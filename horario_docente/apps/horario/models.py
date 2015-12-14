@@ -47,6 +47,7 @@ class Semana(models.Model):
 	desde=models.DateField()
 	hasta=models.DateField(editable=False)
 	numero=models.CharField(max_length=10, verbose_name="Numero de Semana")
+	id_semestre=models.ForeignKey(Semestre)
 	
 	def save(self):
 		aux=self.desde
@@ -60,12 +61,14 @@ class Semana(models.Model):
 	
 class Dia(models.Model):
 	fecha=models.DateField()
+	id_semana=models.ForeignKey(Semana)
 	
 #un profesor puede tener varias asignaturas
 class Asignatura(models.Model):
 	id_profesor=models.ForeignKey(User,limit_choices_to={'groups': 3})
 	nombre=models.CharField(max_length=50)
 	tipo=models.CharField(max_length=50, choices=(('conf','conferencia'),('cp','clase práctica'),('sem','seminario'),('lab','laboratorio'),('np','no presencial')))
+	id_semestre=models.ForeignKey(Semestre)
 	
 	def __str__(self):
 		return self.nombre+"|"+self.tipo

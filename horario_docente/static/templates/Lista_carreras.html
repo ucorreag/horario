@@ -12,23 +12,20 @@
 <table class="table">
   <tr><th class="col-lg-4">Carrera</th><th class="col-lg-4">Asignaturas</th><th class="col-lg-4">Acciones</th></tr>
   {% for carrera in carreras %}
-  <tr><td>{{carrera.nombre}}</td></tr>
+  <tr>
+    <td>{{carrera.nombre}}</td>
+    <td><a href="{%url 'lista_asignaturas' carrera.id %}">Asignaturas</a></td>
+    <td><a href="{% url 'eliminar_carrera' carrera.id%}" class="glyphicon glyphicon-trash"></a></td>
+  
+  
+  </tr>
   
   {% endfor %}
   
 </table>
 
 
-
-
-
-
-
-<div>
-  
-  
-  
-  
+</div>
   
  <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       
