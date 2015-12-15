@@ -19,12 +19,26 @@ def index_view(request):
         quin=Año(nombre='quinto')
         quin.save()
     
-    años=Año.objects.all()
-    for año in años:
-        ps=Semestre(nombre='primero',id_año=año)
-        ps.save()
-        sg=Semestre(nombre='segundo',id_año=año)
-        sg.save()
+        años=Año.objects.all()
+        for año in años:
+            ps=Semestre(nombre='primero',id_año=año)
+            ps.save()
+            sg=Semestre(nombre='segundo',id_año=año)
+            sg.save()
+         
+        conf=Tipo(nombre="conferencia")
+        conf.save()
+        cp=Tipo(nombre="clase practica")
+        cp.save()
+        lab=Tipo(nombre="laboratorio")
+        lab.save()
+        sem=Tipo(nombre="seminario")
+        sem.save()
+        cnp=Tipo(nombre="no presencial")
+        cnp.save()
+        tl=Tipo(nombre="taller")
+        tl.save()
+        
     
     
     

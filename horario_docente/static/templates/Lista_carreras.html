@@ -14,8 +14,10 @@
   {% for carrera in carreras %}
   <tr>
     <td>{{carrera.nombre}}</td>
-    <td><a href="{%url 'lista_asignaturas' carrera.id %}">Asignaturas</a></td>
-    <td><a href="{% url 'eliminar_carrera' carrera.id%}" class="glyphicon glyphicon-trash"></a></td>
+    <td><a href="{%url 'lista_asignaturas' carrera.id 1 'primero'%}">Asignaturas</a></td>
+    <td><a href="#" onclick="return false;" id="eliminar" name="{% url 'eliminar_carrera' carrera.id%}" class="glyphicon glyphicon-trash"></a>
+    <h4 class="hidden">¿Desea eliminar {{carrera.nombre}}?</h4>
+    </td>
   
   
   </tr>
@@ -38,7 +40,8 @@
              <form id = "formulario" action= '' method='POST' class=' form-inline botonCentrado'>
                   {% csrf_token %}
                     <div id = "contenedor" class="modal-body">
-                      <input type="text" name="nombre" class="form-control">
+                      <label for="nombre">Nombre de Carrera:</label>
+                      <input type="text" name="nombre" id="nombre"class="form-control">
                     </div>
                     <div class="modal-footer">
                         
@@ -54,6 +57,46 @@
 </div><!-- /.modal -->
 
 
+ <div class="modal fade" id="myeliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Eliminar</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 id="texto" style = "text-align: center" ></h4>
+             </div>
+             <div class="modal-footer">
+                <form id = "formu" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <input type='submit' class='btn btn-danger'  value='Eliminar' class='btn btn-primary'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                </form>
+               </div>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
   
+   
+ {% block extra_js%}
+  <script>
+         jQuery(function($){
+             $('a#eliminar').click(function(){
+               var $texto= $(this).next().text();
+               $('#texto').text($texto);
+               $('#formu').attr('action',$(this).attr('name'));
+               $('#myeliminar').modal('show');
+               
+             });
+             
+         });
+         
+     </script>
+{% endblock %}
+  
  {% endblock %}
+ 

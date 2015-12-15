@@ -17,7 +17,7 @@
 		
 		    
 			<table class="table" >
-				<tr class="active"><th colspan="2">
+				<tr class="active"><th colspan="4">
 				
 				
 				<div class="btn-group col-lg-3">
@@ -30,47 +30,153 @@
 						<li>
 							<a href="#">{{año.id_año.nombre}}</a>
 							<ul>
-								<li><a href="#">Primer Semestre</a></li>
-								<li><a href="#">Segundo Semestre</a></li>
+								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'primero'%}">Primer Semestre</a></li>
+								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'segundo'%}">Segundo Semestre</a></li>
 							</ul>
 						</li>	
 						{% endfor %}
 					</ul>
 					</div>
-					<h4 class="col-lg-3">año</h4><h5 class="col-lg-3">semestre</h5>				
-					<a href="#" class="btn glyphicon glyphicon-plus col-lg-3"> Añadir Asignatura</a>
-					</th></tr>
-					<tr><td >
+					<h4 class="col-lg-3">Año:{{año.nombre}}</h4><h5 class="col-lg-3">Semetre:{{semestre.nombre}}</h5>				
+					<a data-toggle="modal" href="#" onclick="return false;" data-target="#nuevaAsignatura" class="btn glyphicon glyphicon-plus col-lg-3"> Añadir Asignatura</a>
+					</th>
 					
+					
+					</tr>
+					<tr><th>Nombre de Asignatura</th><th>Profesor</th><th>Horas totales</th><th>Acciones</th></tr>
+						<form method="get">{% csrf_token%}
+							{% for asignatura in asignaturas%}
+							<tr>
+							<td >
+								{{asignatura.nombre}}					
+						
+							</td>
+							<td>
+								<a href="{% url 'usuario' asignatura.id_profesor.id%}">{{asignatura.id_profesor.first_name}} {{asignatura.id_profesor.last_name}}</a>
+							</td>
+							<td>{{asignatura.horas}}</td>
+							<td >
+								
+								<a href="#" onclick="return false;" name="{% url 'eliminar_asignatura' asignatura.id %}" id="eliminar"><span class="glyphicon glyphicon-trash" title="eliminar"></span></a>
+							    <h2 class="hidden">¿Desea Eliminar {{asignatura.nombre}}?</h2>
+							</td>
+							</tr>
+							{%endfor%}
+						</form>	
+					 
+						
+					</table>
 										
 					
 				</td></tr>
-						
-					</table>
-					
-					
-					
-				</td></tr>
 				
-			</table><br><br>
-				
-		
-		
+			</table><br><br>	
 		
 	</div>
 	
 	
 </div>
-{% endblock %}
 
- {% block extra_js %}
- <script>
-	 jQuery(function($){
-		 
-		 
-		 
-	 });	 
-	 
- </script> 
+
+
+<!--nueva asignatura-->
+<div class="modal fade" id="nuevaAsignatura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " align="center">Nueva Asignatura</h4>
+             </div>
+             <form id = "formulario" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+				    				  
+                    <div id = "contenedor" class="modal-body">
+						
+						<table class="table">
+							<tr>
+								<td class="col-lg-6">
+								<label for="nombre">Nombre:</label>
+								<input type="text" name="nombre" id="nombre" requerid="" class="form-control">
+								<label for="horas">Horas totales:</label>
+								<input type="number" required=""class="form-control" id="horas" name="horas">
+								<label for="profesor">Profesor:</label>
+								<select name="profesor" id="profesor" class="form-control">
+									{% for profesor in profes %}
+									<option value="{{profesor.id}}">{{profesor.first_name}} {{profesor.last_name}}</option>						  
+									{% endfor %}
+								</select>
+					  	</td>
+					  <td class="col-lg-6">
+						  <label for="carrera">Carrera:</label>
+						  <input id="carrera" type="text"value="{{carrera.nombre}}" readonly class="form-control"/>
+						  <label for="anho">Año:</label>
+						  <input id="anho"type="text"value="{{año.nombre}}" readonly class="form-control"/>
+						  <label for="semestre">Semestre:</label>
+						  <input type="text"value="{{semestre.nombre}}" id="semestre" readonly class="form-control"/>
+					  </td>
+					  <tr>
+						  
+					</table>
+					</div>
+                    <div class="modal-footer">
+                        
+				  
+                  <input type='submit' class='btn btn-default'  value='Guardar'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                
+               </div>
+               </form>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+ <div class="modal fade" id="myeliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Eliminar</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 id="texto" style = "text-align: center" ></h4>
+             </div>
+             <div class="modal-footer">
+                <form id = "fo" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <input type='submit' class='btn btn-danger'  value='Eliminar' class='btn btn-primary'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                </form>
+               </div>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+{% block extra_js %}
+<script>
+         jQuery(function($){
+             $('a#eliminar').click(function(){
+               var $texto= $(this).next().text();
+               $('#texto').text($texto);
+               $('#fo').attr('action',$(this).attr('name'));
+               $('#myeliminar').modal('show');
+               
+             });
+             
+         });
+         
+     </script>
  
  {% endblock%}
+
+
+{% endblock %}
+

@@ -215,17 +215,85 @@ def lista_carreras(request):
             m.save()
     
     return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
-     
-def lista_asignaturas(request, id):
-    carrera=Carrera.objects.get(id=id)
-    carann=CarreraAño.objects.filter(id_carrera=carrera.id)
-    return render_to_response('Lista_asignaturas.html',{'carrerasaños':carann,'carrera':carrera},RequestContext(request))
+
+
     
+def lista_asignaturas(request, car, an, sem):
+       
+    carrera=Carrera.objects.get(id=car)
+    carann=CarreraAño.objects.filter(id_carrera=carrera.id)
+    
+   
+    anho=Año.objects.get(id=an)
+    semestr=Semestre.objects.get(nombre=sem, id_año=anho.id)
+    asignaturas=Asignatura.objects.filter(id_carrera=carrera.id, id_semestre=semestr.id)
+         
+     
+    profe=User.objects.filter(groups=2)
+        
+    if request.POST:
+        nombre=request.POST['nombre']
+        horas=request.POST['horas']
+        profesor=User.objects.get(id=int(request.POST['profesor']))
+        val=False
+        for asi in asignaturas:
+            if asi.nombre == nombre:
+                val=True
+        if val==False:             
+            asig=Asignatura(
+                id_profesor=profesor,
+                nombre=nombre,
+                horas=horas,
+                id_semestre=semestr,
+                id_carrera=carrera,            
+                )
+            asig.save()
+            tp=Tipo.objects.all()
+            for ti in tp:
+                astip=AsignaturaTipo(id_asignatura=asig, id_tipo = ti)
+                astip.save()  
+            
+            actual = request.META.get('HTTP_REFERER', None) or '/'
+            return  HttpResponseRedirect(actual)
+     
+        
+        
+    aux={
+        'carrerasaños':carann,
+        'carrera':carrera,
+        'profes':profe,
+        'asignaturas':asignaturas,
+        'año':anho,
+        'semestre':semestr,
+        }
+    
+    
+    return render_to_response('Lista_asignaturas.html',aux,RequestContext(request))
+    
+
+def eliminar_asignatura(request,id):
+    asignatura=Asignatura.objects.get(id=id)
+    asignatura.delete()
+    
+    astp=AsignaturaTipo.objects.filter(id_asignatura=asignatura.id)
+    for asp in astp:
+        asp.delete()
+    
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+     
 def eliminar_carrera(request,id):
     carrera=Carrera.objects.get(id=id)
     carrera.delete()
+    ca=CarreraAño.objects.filter(id_carrera=id)
+    for caa in ca:
+        caa.delete()
+    
+    asig=Asignatura.objects.filter(id_carrera=id)
+    for asigna in asig:
+        eliminar_asignatura(request,asigna.id)
     
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)              
         
-         

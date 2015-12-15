@@ -67,15 +67,25 @@ class Dia(models.Model):
 class Asignatura(models.Model):
 	id_profesor=models.ForeignKey(User,limit_choices_to={'groups': 3})
 	nombre=models.CharField(max_length=50)
-	tipo=models.CharField(max_length=50, choices=(('conf','conferencia'),('cp','clase práctica'),('sem','seminario'),('lab','laboratorio'),('np','no presencial')))
+	horas=models.IntegerField()
 	id_semestre=models.ForeignKey(Semestre)
+	id_carrera=models.ForeignKey(Carrera)
 	
 	def __str__(self):
-		return self.nombre+"|"+self.tipo
+		return self.nombre
 
 class Turno(models.Model):
 	id_dia=models.ForeignKey(Dia)
 	id_asignatura=models.ForeignKey(Asignatura)
 	turno=models.CharField(max_length=10,choices=(('1','primero'),('2','segundo'),('3','tercero'),('4','cuarto'),('5','quinto'),('6','sexto')))
 	
+class Tipo(models.Model):
+	nombre=models.CharField(max_length=20)
+	
+	def __str__(self):
+		return self.nombre
+		
+class AsignaturaTipo(models.Model):
+	id_asignatura=models.ForeignKey(Asignatura)
+	id_tipo=models.ForeignKey(Tipo)
 	
