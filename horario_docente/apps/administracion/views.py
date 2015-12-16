@@ -52,13 +52,13 @@ def logout(request):
 @login_required
 def user_detail(request,id):
 
-    user = User.objects.get(id=id)
+    usuario = User.objects.get(id=id)
 
     return render_to_response(
         'Detalles_Usuario.html',
         {
             'p': _('Detalles del Usuario'),
-            'user':user,
+            'usuario':usuario,
             },
         RequestContext(request)
     )
@@ -297,3 +297,7 @@ def eliminar_carrera(request,id):
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)              
         
+        
+def crear_horario(request, id):
+    
+    return render_to_response('crear_horario.html',RequestContext(request)) 

@@ -20,24 +20,26 @@
 				<tr class="active"><th colspan="4">
 				
 				
-				<div class="btn-group col-lg-3">
+				<div class="btn-group col-lg-1">
 					<a href="#" onclick="return false;" class=" btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="
-                    glyphicon glyphicon-th-list"  aria-hidden="true" ></span>
+					<span class="glyphicon glyphicon-th-list"  aria-hidden="true" ></span>
 					</a>
 					<ul class="dropdown-menu">
 						{%for año in carrerasaños%}
-						<li>
-							<a href="#">{{año.id_año.nombre}}</a>
-							<ul>
-								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'primero'%}">Primer Semestre</a></li>
-								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'segundo'%}">Segundo Semestre</a></li>
-							</ul>
+						<li class="disabled" style="background:#866000">
+							<a href="#" onclick="return false;" class="">{{año.id_año.nombre}} año</a>
+							
+								<li class="dropdown-item"><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'primero'%}">Primer Semestre</a></li>
+								<li class="dropdown-item"><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'segundo'%}">Segundo Semestre</a></li>
+							
 						</li>	
 						{% endfor %}
 					</ul>
 					</div>
-					<h4 class="col-lg-3">Año:{{año.nombre}}</h4><h5 class="col-lg-3">Semetre:{{semestre.nombre}}</h5>				
+					<h4 class="col-lg-3">Año:{{año.nombre}}</h4><h4 class="col-lg-3">Semestre:{{semestre.nombre}}</h4>
+					<h4 class="col-lg-2"><a href="{% url 'horario' semestre.id %}"  name="" id="horario"><span class="glyphicon glyphicon-list-alt" title="horario"></span></a></h4>
+					
+									
 					<a data-toggle="modal" href="#" onclick="return false;" data-target="#nuevaAsignatura" class="btn glyphicon glyphicon-plus col-lg-3"> Añadir Asignatura</a>
 					</th>
 					
@@ -57,7 +59,7 @@
 							<td>{{asignatura.horas}}</td>
 							<td >
 								
-								<a href="#" onclick="return false;" name="{% url 'eliminar_asignatura' asignatura.id %}" id="eliminar"><span class="glyphicon glyphicon-trash" title="eliminar"></span></a>
+							    <a href="#" onclick="return false;" name="{% url 'eliminar_asignatura' asignatura.id %}" id="eliminar"><span class="glyphicon glyphicon-trash" title="eliminar"></span></a>
 							    <h2 class="hidden">¿Desea Eliminar {{asignatura.nombre}}?</h2>
 							</td>
 							</tr>

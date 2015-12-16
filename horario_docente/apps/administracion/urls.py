@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'lista_asignaturas/(?P<car>[^/]+)/(?P<an>[^/]+)/(?P<sem>[^/]+)/$','apps.administracion.views.lista_asignaturas', name='lista_asignaturas'),
     url(r'eliminar_carrera/(?P<id>\d+)/$','apps.administracion.views.eliminar_carrera',name='eliminar_carrera'),
     url(r'eliminar_asignatura/(?P<id>\d+)/$','apps.administracion.views.eliminar_asignatura', name="eliminar_asignatura"), 
-	]
+	url(r'crear_horario/(?P<id>\d+)/$','apps.administracion.views.crear_horario',name='horario')
+    ]
