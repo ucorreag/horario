@@ -13,12 +13,27 @@
     <form method="post">{% csrf_token %}
             <table class="table">
                 <tr>
-                     <td class=""> <label for="desde">Desde:</label><input  id="desde" type="date" class="form-control"></td>
-                     <td class=""colspan="2"> <label for="carrera">Carrera:</label><input readonly id="carrera" type="text" class="form-control"></td>
+                    <td>
+                     <label for="fecha">Fecha de Incio:</label>
+                    
+                     {% if seman%}
                      
-                     <td class=""><label for="semana">N° de Semana:</label><input  id="semana" type="text" class="form-control"></td>
-                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control"></td>
-                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control"></td>
+                     <div class="form-control">
+                    <span class="active" id="desde"></span>
+                    <a href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    </div>
+                    
+                    {% else %}
+                    <input type="date" name="fecha" class="form-control">
+                    {%endif%}
+                    
+                   </td>    
+                    
+                     <td class=""colspan="2"> <label for="carrera">Carrera:</label><input readonly id="carrera" type="text" class="form-control" value="{{seman.id_carrera.nombre}}"></td>
+                     
+                     <td class=""><label for="semana">N° de Senmana:</label><input  id="semana" type="text" class="form-control" readonly value="{{ lists.number }}"></td>
+                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_semestre.id_año.nombre}}"></td>
+                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_semestre.nombre}}"></td>
                      
                 </tr> 
                 </table>
@@ -34,7 +49,29 @@
                        <th class="col-lg-2">Viernes</th>
                      </tr> 
                      </thead>
-                     <tbody id="body" >
+                     <tbody id="body">
+                        <tr>
+                            <td >
+                                <table class="table" id="cont"></table>                                
+                            </td>
+                            <td >
+                                <table class="table" id="primero"></table>  
+                            </td>
+                            <td >
+                                <table class="table" id="segundo"></table>
+                            </td>
+                            <td >
+                                 <table class="table" id="tercero"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="cuarto"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="quinto"></table>
+                            </td>
+                            </tr>
+                                            
+                         
                          
                      </tbody>    
                   </table>
@@ -44,17 +81,17 @@
                    <div>
                         <ul class="paginador pager">
                         <span class="step-links">
-                            {% if contacts.has_previous %}
-                                <li><a  class="" href="?page={{ contacts.previous_page_number }}">&laquo;</a></li>
+                            {% if lists.has_previous %}
+                                <li><a  class="" href="?page={{ lists.previous_page_number }}">&laquo;</a></li>
                             {% else %}
                             <li class="disabled"><a  class="btn" href="?page={{ 0 }}">&laquo;</a></li>
                             {% endif %}
                         <li> <span class="">
-                                <b> </b>  Semana {{ contacts.number }} de {{ contacts.paginator.num_pages }}.
+                                <b> </b>  Semana {{ lists.number }} de {{ lists.paginator.num_pages }}.
                                 
                             </span></li>
-                            {% if contacts.has_next %}
-                                <li><a  class="" href="?page={{ contacts.next_page_number }}">&raquo;</a></li>
+                            {% if lists.has_next %}
+                                <li><a  class="" href="?page={{ lists.next_page_number }}">&raquo;</a></li>
                             {% else %}
                                 <li class="disabled"><a  class="btn" href="?page={{0}}">&raquo;</a></li>
                     
@@ -71,30 +108,153 @@
   <!--crear y eliminar turno con modal-->
   
   
-  
-  
-  
-            
+<!-- Modal de  Crear -->
+<div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Incertar Asignatura</h4>
+      </div>
+      <form action="{% url 'crear_turno'%}" method="post">{% csrf_token%}
+      <div class="modal-body">
+          <table class="table">
+           <tr> 
+               <td>
+                <label for="asignatura">Asignatura:</label>
+                <select name="asignatura" id="asignatura" class="form-control">
+                   {% for asig in asignaturas%}
+                    <option value="{{asig.id}}">{{asig.nombre}}</option>
+                   {%endfor%}                     
+                </select>
+                <label for="tipo">Tipo:</label>
                 
+                <select name="tipp" id="tipo" class="form-control">
+                   {%for tipo in tipos%}
+                    <option value="{{tipo.id}}">{{tipo.nombre}}</option>
+                    {%endfor%}
+                </select>
+                  
+              </td>
+               <td>
+                    <label for="turno" >Turno:</label><h5 id="turno"></h5><input  id="t" type="text" name="turnoo" class="hidden">
+                    <label for="dia">Dia:</label><h5 id="dia"></h5>
+                    <input id="diaid" name="diass" class="hidden"> 
+              </td>
+              
+         </tr>
+       </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Canselar</button>
+        <input type="submit" class="btn btn-default" value="Guardar">      </div>
+      </form>
+    </div>
+  </div>
+</div> 
+  
+  
+  
+  
+  
+  
+  
+ 
+          
+           
+ <!-- Datos para crear tabla-->           
+ {% for object in lists %}
+  <h2 class="hidden datos"  name="{{object.fecha}}"></h2>
+ {%endfor%}                
  
  {% block extra_js %}
-<script>
-         jQuery(function($){
-               var $aux="";
-               for (var j=0; j < 6; j++) {
-					for (var i=0; i < 5; i++) {
-						
-					   	$aux+="<td name=\"selda\"><a href=\"\"class=\"btn btn-default\">Añadir</a> </td>";
-						
-					};       
-               
-               $('#body').append('<tr><th>'+(j+1)+'</th>'+$aux+'</tr>');
-               $aux="";
-               };
-              
-         });
+  <script>
+      jQuery(function($){
+         var con=1;
+         var aux=$("#primero");
+          var oc=document.getElementsByClassName("datos");
+         {% for object in lists %} 
+         if (con==2){
+             aux=$("#segundo");
+         }else if(con==3){
+             aux=$("#tercero");             
+         }else if(con==4){
+             aux=$("#cuarto");             
+         }else if(con==5){
+             aux=$("#quinto");             
+         }
+                  
          
-     </script>
+         for (var i=1; i<=6;i++){
+             
+          
+          {% if isturno %} 
+            var br=false;
+            
+            {% for tr in turnos %} 
+                var id="{{object.id}}";
+                var id2="{{tr.id_dia.id}}";
+                var turn="{{tr.turno}}";
+                         
+                if ( parseInt(turn) == i && id == id2){
+                 var asignas="{{tr.id_asignatura_tipo.id_asignatura.nombre}}";
+                 var tip="{{tr.id_asignatura_tipo.id_tipo.nombre}}";
+                 var format="";
+                 if (tip=="conferencia"){format=asignas.charAt(0).toUpperCase();}
+                 else if(tip=="clase practica"){format=asignas.charAt(0).toLowerCase();}
+                 else if(tip=="laboratorio"){format="L"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="seminario"){format="S"+asignas.charAt(0).toLowerCase();} 
+                 else if(tip=="no presencial"){format="NP"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="taller"){format="T"+asignas.charAt(0).toLowerCase();}
+                                   
+                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+"<p></td></tr>");
+                br=true;
+                };
+            {% endfor %}
+               if(br==false){          
+                aux.append("<tr><td><a id=\"entra\" name=\""+i+"-{{object.fecha}}-{{object.id}}\" href=\"#\" class=\"btn btn-default\">Añadir</a></td></tr>");
+               } 
+         {%else%}
+         aux.append("<tr><td><a id=\"entra\" href=\"#\" name=\""+i+"-{{object.fecha}}-{{object.id}}\" class=\"btn btn-default\">Añadir</a></td></tr>");
+         {%endif%}
+         };
+         con+=1;
+         {%endfor%}
+                   
+          
+          $('#desde').append(oc[0].getAttribute('name'));
+          for(var h=1;h<=6;h++){
+              $('#cont').append("<tr><th style=\"font-size:24px;\"class=\"\">"+h+"</th></tr>");
+          }
+          
+          
+      });
+      
+  </script>
+  <script>
+      jQuery(function($){
+         var entrada=$('a#entra');
+         entrada.click(function(){
+            var na=$(this).attr('name').split('-');
+            
+            $('#turno').text(na[0]);
+            $('#t').attr('value',na[0]);
+            $('#dia').text(na[1]);
+            $('#diaid').attr('value',na[2]);
+            $('#nuevo').modal('show'); 
+         }); 
+          
+      });
+      
+      
+  </script>
+  
+  
+  
+  
  
  {% endblock%}
  
