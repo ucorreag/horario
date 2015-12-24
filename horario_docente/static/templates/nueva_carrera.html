@@ -1,0 +1,29 @@
+<div class="modal fade" id="modalNuevaCarrera" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Nueva Carrera</h4>
+             </div>
+             <form id="fomunuevacarrera" action="" method='POST' >
+                  {% csrf_token %}
+                    <div id = "contenedor" class="modal-body">
+                      <label for="nombre">Nombre de Carrera:</label>
+                      <input type="text" name="nombre" id="nombre"class="form-control">
+                      <label for="año">Cantidad de Años:</label>
+                      <input type="number" name="año" id="año"class="form-control">
+                   
+                    </div>
+                    <div class="modal-footer">
+                        
+				  
+                  <input type='submit' class='btn'  value='Guardar'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                
+               </div>
+               </form>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

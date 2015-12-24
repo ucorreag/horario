@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
                <div class="panel panel-default">
-                <nav class="navbar navbar-inverse theme_border">
+                <nav class="navbars navbar-inverse theme_border">
                        <div class="form-horizontal">
                            <h4 class="text-center" style="color: #f6faff">
-                                          Lista de Usuarios
+                                          Lista de Planificadores
                                
                            </h4>
                        </div>
@@ -32,7 +32,7 @@
                  <th class="col-lg-2" >Apellidos:</th>
                  <th class="col-lg-2" >Nombre de Usuario:</th>
                  <th class="col-lg-2" >Correo web:</th>
-                 <th class="col-lg-2" >Rol:</th>                 
+                               
                 <th class="col-lg-2" >Operaciones:</th>
                 </tr>
 
@@ -46,7 +46,7 @@
             <td >{{ object.last_name}}</td>
              <td >{{ object.username}}</td>
             <td >{{ object.email}}</td>
-            <td>{{object.groups.get}}</td>
+            
 
               
 

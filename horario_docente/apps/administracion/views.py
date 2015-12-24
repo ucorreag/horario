@@ -2,7 +2,7 @@ from gettext import gettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import  User,Group
 from django.views.generic.edit import CreateView
@@ -10,16 +10,13 @@ from django.views.generic import FormView
 from django.core.urlresolvers import reverse
 from apps.horario.models import *
 from datetime import *
+from django.core.serializers import serialize
+import json
 
 
 from django.core.paginator import EmptyPage,Paginator,PageNotAnInteger
 from .utiles import login_required
 
-
-USER_ROLES = (
-  (0x01, _('Planificador')),
-  (0x02, _('Profesor')),
-)
 #Se han hecho cambios en este m'etodo respecto al oriiginal
 def login(request):   
     next =  '/'
@@ -49,33 +46,63 @@ def logout(request):
     return HttpResponseRedirect(reverse('home'))
 #Detalles de Usuarios
 
-@login_required
-def user_detail(request,id):
-
-    usuario = User.objects.get(id=id)
-
-    return render_to_response(
-        'Detalles_Usuario.html',
-        {
-            'p': _('Detalles del Usuario'),
-            'usuario':usuario,
-            },
-        RequestContext(request)
-    )
 #Crear Usuarios
+#id facultad_categoria
+def crear_carrera(request, id):
+    if request.POST:
+        facultcat=FacultadCategoria.objects.get(id=id)
+        nombre=request.POST['nombre']
+        cantidad_años=int(request.POST['año'])
+        try:
+            carrera=Carrera.objects.get(
+                nombre=nombre,
+                cantidad_años=cantidad_años,
+                id_facultad_categoria=facultcat,            
+            )
+        except ObjectDoesNotExist:            
+            carrera=Carrera(
+                nombre=nombre,
+                cantidad_años=cantidad_años,
+                id_facultad_categoria=facultcat,            
+            )  
+            carrera.save()
+        
+            semestres=Semestre.objects.all()
+            semestre1 = Año.objects.filter(id_semestre=semestres[0].id)
+            semestre2 = Año.objects.filter(id_semestre=semestres[1].id)
+            conta=0
+            for an in semestre1:
+                if conta<cantidad_años:
+                    m=CarreraAño(id_carrera=carrera, id_año=an)
+                    m.save()
+                    conta+=1
+                    
+            conta=0       
+            for an in semestre2:
+                if conta<cantidad_años:
+                    m=CarreraAño(id_carrera=carrera, id_año=an)
+                    m.save()
+                    conta+=1 
+            
+        actual = request.META.get('HTTP_REFERER', None) or '/'
+        return  HttpResponseRedirect(actual)             
+
+
+
+
+
 @login_required
 def user_create(request):
 
     context = {
-        'p': _('Crear Usuario'),
-        'roles': USER_ROLES,
+        'p': _('Crear Planificador'),
+        
         }
     if request.POST:
         username = request.POST['username']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
-        role = int(request.POST['role'])        
         password = request.POST['password']
 
                 
@@ -86,23 +113,16 @@ def user_create(request):
             context['first_name'] = first_name
             context['last_name'] = last_name
             context['email'] = email
-            context['role'] = role
-           
+            
         else:
-                g=Group.objects.filter(id=role)
+            user= User.objects.create_user(username, email,  password)
+            user.first_name= first_name
+            user.last_name = last_name
+            user.is_staff=True
+            user.is_superuser=True
+            user.save()
 
-                user= User.objects.create_user(username, email,  password)
-                user.first_name= first_name
-                user.last_name = last_name
-                user.is_staff=True
-                user.groups=g
-                user.role=role
-                
-                if role==1:
-                    user.is_superuser=True
-                user.save()
-
-                return HttpResponseRedirect(reverse('lista_usuarios'))
+            return HttpResponseRedirect(reverse('lista_usuarios'))
 
     return render_to_response(
         'Crear_Usuario.html',
@@ -124,17 +144,12 @@ def user_update(request,id):
         username = request.GET['username']
         first_name = request.GET['first_name']
         last_name = request.GET['last_name']
-        role = int(request.GET['role'])
         password = request.GET['password']
-        print(role)
-        gr=Group.objects.filter(id=role)
+        
         use.first_name= first_name
         use.last_name = last_name
         use.is_staff=True
-        use.groups=gr
-        use.role=role
-        if role==1:
-            use.is_superuser=True
+        use.is_superuser=True
         use.save()
         return HttpResponseRedirect('/administracion/lista_usuarios/')
     
@@ -142,9 +157,9 @@ def user_update(request,id):
         return render_to_response(
              'Modificar_Usuario.html',
             {
-                'p': _('Actualizar Usuario ' +use.username+''),
+                'p': _('Actualizar Planificador ' +use.username+''),
                 'usuario':use,
-                'roles': USER_ROLES,
+                
                 },
             RequestContext(request)
         )
@@ -158,6 +173,37 @@ def user_delete(request,id):
     e.delete()
     return HttpResponseRedirect(actual)
     
+@login_required   
+def profesor_list(request):
+    users = Profesor.objects.all()
+    if request.POST:
+        users=Profesor.objects.filter(nombre=request.POST['nombre'])
+       
+    
+    paginator = Paginator(users, 5)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        contacts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        contacts = paginator.page(paginator.num_pages)
+    return render_to_response(
+         'Lista_profesor.html',
+         {             
+             'contacts':contacts,
+         },
+         RequestContext(request)
+    )
+
+
+
+
+
+
+
 @login_required   
 def user_list(request):
     users = User.objects.all()
@@ -200,19 +246,11 @@ def cambiarPassword(request):
         
         return render_to_response('CambiarPassword.html',context_instance = RequestContext(request))
         
- #crear carreras
+ 
 @login_required
 def lista_carreras(request):
     carreras=Carrera.objects.all()
-    if request.POST:
-        nombre=request.POST['nombre']
-        carrera=Carrera(nombre=nombre)
-        carrera.save()
-        
-        año=Año.objects.all()
-        for an in año:
-            m=CarreraAño(id_carrera=carrera, id_año=an)
-            m.save()
+    
     
     return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
 
@@ -285,23 +323,24 @@ def crear_semana(request):
     a=int(de[2])
     
     numero=str(request.POST['numero'])
-    semestre=int(request.POST['semestre'])
+    año=int(request.POST['año'])
     carrera=int(request.POST['carrera'])
-    seme=Semestre.objects.get(id=semestre)
+    an=Año.objects.get(id=año)
     car=Carrera.objects.get(id=carrera)
     
     dt=date(d,m,a)
     sem=Semana(
         desde = dt,
         numero=numero,
-        id_semestre=seme,
+        id_año=an,
         id_carrera=car,
         )
         
     try:   
-        semanas=Semana.objects.get(desde = dt,
+        semanas = Semana.objects.get(
+            desde = dt,
             numero=numero,
-            id_semestre=semestre,
+            id_año=an,
             id_carrera=carrera,
             )
     except ObjectDoesNotExist:
@@ -320,7 +359,7 @@ def crear_semana(request):
                 sm=Semana(
                     desde=date(yr,mt,dy),
                     numero=int((i+1)/5)+1,
-                    id_semestre=seme,
+                    id_año=an,
                     id_carrera=car,                    
                     )
                 sm.save() 
@@ -403,21 +442,22 @@ def eliminar_carrera(request,id):
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)              
         
-        
+ 
+#id año        
 def crear_horario(request, id):
-    seman=Semana.objects.filter(id_semestre=id)
+    smna=Semana.objects.filter(id_año=id)
     
     x=None
-    if seman !=[]:
-        x=seman[0]
-        for i in seman:
+    if smna !=[]:
+        x=smna[0]
+        for i in smna:
             if x.desde > i.desde:
                 x=i             
             
-    semana=x
+    semanita=x
     
     
-    smna=Semana.objects.filter(id_semestre=id)
+    
     dias=[]
     for j in smna:
         dias+=Dia.objects.filter(id_semana=j.id)
@@ -454,14 +494,31 @@ def crear_horario(request, id):
         # If page is out of range (e.g. 9999), deliver last page of results.
         contacts = paginator.page(paginator.num_pages)
     
+    
+    facultad=Facultad.objects.all()
+    semestre=Semestre.objects.all()
+    carrerasa=CarreraAño.objects.all()
+    carreras=Carrera.objects.all()
+    facultadcategoria=FacultadCategoria.objects.all()
+    usuarios=User.objects.all() 
+    semana=Semana.objects.all()
+      
+    
     auxi={
         'lists':contacts,
-         'seman':semana ,
+         'seman':semanita ,
          'turnos':turnos,
          'asignaturas':asignaturas,
          'tipos':tipos,
          'isturno':isturno,
-         }
+         'facultad': facultad,
+         'semestre': semestre,
+         'carrerasaño': carrerasa,
+         'carreras':carreras,
+         'facultadcategoria':facultadcategoria,
+         'usuarios':usuarios,
+         'semana':semana,
+          }
     
     return render_to_response('crear_horario.html',auxi,RequestContext(request)) 
     
@@ -484,4 +541,75 @@ def crear_turno(request):
     
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
+    
+    
+    #crear otros tipos
+    
+    
+    
+
+
+def crear_facultad(request):
+    facultad=request.POST['nombre']
+    try:
+        facu=Facultad.objects.get(nombre=facultad)
+    except ObjectDoesNotExist:
+        facu=Facultad(nombre=facultad)
+        facu.save()
+        
+        cate=Categoria.objects.all()
+        for caten in cate:
+            fc1=FacultadCategoria(id_facultad=facu, id_categoria=caten)
+            fc1.save()
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+    
+ 
+ 
+def is_semana(request):
+    if request.is_ajax:
+        id_an=int(request.GET['id'])
+        sem=Semana.objects.filter(id_año=id_an)
+        
+        semanas=False
+        if sem:
+            semanas=True
+        
+        aux={'semana':semanas}
+        
+        dato=json.dumps(aux)
+        print(semanas)
+        return HttpResponse(dato, content_type="application/json")
+        
+    else:
+        raise Http404   
+        
+     
+ 
+    
+def infomacion_preimera_semana(request):
+    if request.is_ajax:
+               
+        id_an=int(request.GET['id'])
+        an=Año.objects.get(id=id_an)
+        semestre = Semestre.objects.get(id=an.id_semestre.id)
+        
+        car=CarreraAño.objects.filter(id_año=id_an)
+        carA=car[0]        
+        carrn=carA.id_carrera.nombre
+        carrid=carA.id_carrera.id
+        
+        datos={
+            'año':an.nombre,
+            'año_id':id_an,
+            'semestre':semestre.nombre,
+            'carrera_nombre':carrn,
+            'carrera_id':carrid,
+            }
            
+        dato=json.dumps(datos)
+        
+        return HttpResponse(dato, content_type="application/json")
+        
+    else:
+        raise Http404   

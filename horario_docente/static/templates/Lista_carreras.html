@@ -8,7 +8,7 @@
             </h4>
        </div>
      </nav>
-<a href="#" onclick="return false;" class ="btn" data-toggle="modal" data-target="#modalNuevo"><span class="glyphicon glyphicon-plus"></span> Nueva Carrera</a>
+<a href="#" onclick="return false;" class ="btn" data-toggle="modal" data-target="#modalNuevaCarrera"><span class="glyphicon glyphicon-plus"></span> Nueva Carrera</a>
 <table class="table">
   <tr><th class="col-lg-4">Carrera</th><th class="col-lg-4">Asignaturas</th><th class="col-lg-4">Acciones</th></tr>
   {% for carrera in carreras %}
@@ -28,8 +28,8 @@
 
 
 </div>
-  
- <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <!--crear carrera-->
+ <div class="modal fade" id="modalNuevaCarrera" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -37,11 +37,14 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
                     <h4 class="modal-title " >Nueva Carrera</h4>
              </div>
-             <form id = "formulario" action= '' method='POST' class=' form-inline botonCentrado'>
+             <form id = "formulario" action= "{% url 'crear_carrera' 1 %}" method='POST' >
                   {% csrf_token %}
                     <div id = "contenedor" class="modal-body">
                       <label for="nombre">Nombre de Carrera:</label>
                       <input type="text" name="nombre" id="nombre"class="form-control">
+                      <label for="año">Cantidad de Años:</label>
+                      <input type="number" name="año" id="año"class="form-control">
+                   
                     </div>
                     <div class="modal-footer">
                         
@@ -57,7 +60,7 @@
 </div><!-- /.modal -->
 
 
- <div class="modal fade" id="myeliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal fade" id="eliminarcarrera" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -89,7 +92,7 @@
                var $texto= $(this).next().text();
                $('#texto').text($texto);
                $('#formu').attr('action',$(this).attr('name'));
-               $('#myeliminar').modal('show');
+               $('#eliminarcarrera').modal('show');
                
              });
              

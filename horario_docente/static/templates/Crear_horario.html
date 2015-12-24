@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 {% block content %}
  <div class="panel panel-default">
-   <nav class="navbar navbar-inverse theme_border">
+   <nav class="navbars navbar-inverse theme_border">
         <div class="form-horizontal" >
                <h4 class="text-center" style="color: #f6faff">
                                          Crear Horario Docente
@@ -32,8 +32,8 @@
                      <td class=""colspan="2"> <label for="carrera">Carrera:</label><input readonly id="carrera" type="text" class="form-control" value="{{seman.id_carrera.nombre}}"></td>
                      
                      <td class=""><label for="semana">N° de Senmana:</label><input  id="semana" type="text" class="form-control" readonly value="{{ lists.number }}"></td>
-                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_semestre.id_año.nombre}}"></td>
-                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_semestre.nombre}}"></td>
+                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_año.nombre}}"></td>
+                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_año.id_semestre.nombre}}"></td>
                      
                 </tr> 
                 </table>
@@ -204,13 +204,17 @@
                  var tip="{{tr.id_asignatura_tipo.id_tipo.nombre}}";
                  var format="";
                  if (tip=="conferencia"){format=asignas.charAt(0).toUpperCase();}
-                 else if(tip=="clase practica"){format=asignas.charAt(0).toLowerCase();}
+                 else if(tip=="clase práctica"){format=asignas.charAt(0).toLowerCase();}
                  else if(tip=="laboratorio"){format="L"+asignas.charAt(0).toLowerCase();}
                  else if(tip=="seminario"){format="S"+asignas.charAt(0).toLowerCase();} 
-                 else if(tip=="no presencial"){format="NP"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="prueba parcial"){format="PP"+asignas.charAt(0).toUpperCase();}
+                 else if(tip=="proyecto de curso"){format="PC"+asignas.charAt(0).toLowerCase();} 
+                 
+                 
+                 else if(tip=="otras actividades"){format="&"+asignas.charAt(0).toLowerCase();}
                  else if(tip=="taller"){format="T"+asignas.charAt(0).toLowerCase();}
                                    
-                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+"<p></td></tr>");
+                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+" <a href=\"#\" style=\"color:red;\" name=\"{% url 'eliminar_turno' tr.id}}\"><span class=\"glyphicon glyphicon-remove\"></span></a></p></td></tr>");
                 br=true;
                 };
             {% endfor %}
