@@ -33,7 +33,7 @@
 								{%for carreraa in carrerasaño%}
 			         	        {%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
 								<li>
-									<a href="#" name="{{carreraa.id_año.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
+									<a href="#" name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
 								</li>
 								{%endif%}
 						        {%endfor%}
@@ -44,7 +44,7 @@
 								{%for carre in carrerasaño%}
 			         	        {%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
 								<li>									
-									<a href="#" name="{{carreraa.id_año.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
+									<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
 								</li>
 								{%endif%}
 						        {%endfor%}
@@ -72,7 +72,7 @@
 											{%for carreraa in carrerasaño%}
 											{%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
 											<li>
-												<a href="#"  name="{{carreraa.id_año.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
+												<a href="#"  name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
 											</li>
 											{%endif%}
 											{%endfor%}
@@ -83,7 +83,7 @@
 											{%for carre in carrerasaño%}
 											{%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
 											<li>									
-												<a href="#" name="{{carreraa.id_año.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
+												<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
 											</li>
 											{%endif%}
 											{%endfor%}
@@ -128,8 +128,6 @@
                 <div id = "contenedor" class="modal-body">
 					<label for="nombre">Faculdad:</label>
 					<input type="text" required="" placeholder="facultad" id="nombre" name="nombre" class="form-control">
-									
-					
 					
 				</div>
 				<div class="modal-footer">
@@ -165,17 +163,15 @@
                 <form id = "forh" action= "{% url 'crear_semana'%}" method='POST' >
                   {% csrf_token %}
 			      <div class="modal-body">  
-				  <label for="nm">Fecha de inicio de la Primera semana:</label>
-				  <input type="date" name="desde" id="nm" class="form-control">
-				  <label for="numero">Numero de semana:</label>
-				  <input type="text" id="numero"name="numero" readonly value="01" class="form-control">
-				  <label for="anho_nombre">Año:</label>
-                 <input type="text" id="anho_nombre" readonly value="" class="form-control">
-				 <label for="semestre">Semestre:</label>
-                 <input type="text" id="semestre" readonly value="" class="form-control">
-				  <input type="text" id="anho_id" name="año" class="hidden" value="">
-				  <label for="carrerass">Carrera:</label>
-				  <input type="text" id="carrera_nombre" readonly value="" class="form-control">
+				  <label for="nm">Fecha de inicio de la Primera semana(LUNES):</label>
+				  <input type="date" name="desde" id="nm" placeholder="2016-12-31" required="" class="form-control">
+				  <h5 class="hidden" id="oculto">La fecha incertada no es lunes</h5>
+				  
+				  <label for="cantidad">Cantidad de Semanas:</label>
+				  <input type="number" id="cantidad"name="cantidad_sem"required="" class="form-control">
+				  
+				  <input type="text" id="numero"name="numero" readonly value="1" class="hidden">
+                 <input type="text" id="anho_id" name="año" class="hidden" value="">
 				  <input type="text" name="carrera" id="carrera_id" value="" class="hidden">
 			     </div>
 			     <div class="modal-footer">
@@ -199,7 +195,7 @@
 
 <script>
          jQuery(function($){
-			 var lista=$('a.carrera');
+			 var lista=$('li.sub ul li.sub ul li.sub ul li>a.items');
              lista.click(function(){
                var texto= $(this).attr('name');
 			   $.ajax({
@@ -216,10 +212,9 @@
 							type:'GET',						
 							data:{'id':texto},
 							success: function(data){							
-								$('#anho_nombre').attr('value',data.año);
+								
 								$('#anho_id').attr('value',data.año_id);
-								$('#semestre').attr('value',data.semestre);
-								$('#carrera_nombre').attr('value',data.carrera_nombre);
+																
 								$('#carrera_id').attr('value',data.carrera_id);
 							},
 							error: function(err){
@@ -295,3 +290,24 @@ jQuery(function($){
 });
 </script>	
 
+<script>
+	$('#nm').focusout(function(){
+	var valor=$('#nm').val();
+	
+	$.ajax({
+		 url:'/administracion/islunes/',
+		 type:'GET',						
+		 data:{'dato':valor},
+		 success: function(data){
+		 if (!data.islunes){
+			$('#nm').val('');			
+			$('#oculto').removeAttr('class') 
+			$('#oculto').attr('style','color:red') 
+			 }else{
+			$('#oculto').attr('class','hidden') 
+				 
+			 }
+		 },
+	});
+});
+</script>

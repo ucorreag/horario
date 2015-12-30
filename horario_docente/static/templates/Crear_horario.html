@@ -1,5 +1,8 @@
 {% extends 'base.html'%}
+{%load staticfiles%}
 {% block content %}
+<link rel="stylesheet" href="{%static 'css/controles.css'%}">
+
  <div class="panel panel-default">
    <nav class="navbars navbar-inverse theme_border">
         <div class="form-horizontal" >
@@ -18,22 +21,22 @@
                     
                      {% if seman%}
                      
-                     <div class="form-control">
-                    <span class="active" id="desde"></span>
-                    <a href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                     <div class="input-control text" id="fechass" data-role="input">
+                    <input type="date" placeholder="2016-12-31" required readonly class="active form-control" id="desde">
+                     <button class="button helper-button clear">
+                     <span class="mif-cross"></span></button>                    
                     </div>
-                    
-                    {% else %}
-                    <input type="date" name="fecha" class="form-control">
+                    <input type="date" id="desdesiem" class="hidden">
+                   
                     {%endif%}
                     
                    </td>    
                     
                      <td class=""colspan="2"> <label for="carrera">Carrera:</label><input readonly id="carrera" type="text" class="form-control" value="{{seman.id_carrera.nombre}}"></td>
                      
-                     <td class=""><label for="semana">N° de Senmana:</label><input  id="semana" type="text" class="form-control" readonly value="{{ lists.number }}"></td>
-                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_año.nombre}}"></td>
-                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_año.id_semestre.nombre}}"></td>
+                     <td class=""><label for="semana">N° de Semana:</label><input  id="semana" type="text" class="form-control" readonly value="{{ lists.number }}"></td>
+                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_carrera_año.id_año.nombre}}"></td>
+                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_carrera_año.id_año.id_semestre.nombre}}"></td>
                      
                 </tr> 
                 </table>
@@ -44,7 +47,7 @@
                        <th class="col-lg-2">Turno</th>
                        <th class="col-lg-2">Lunes</th>
                        <th class="col-lg-2">Martes</th>
-                       <th class="col-lg-2">Miercoles</th>
+                       <th class="col-lg-2">Miércoles</th>
                        <th class="col-lg-2">Jueves</th>
                        <th class="col-lg-2">Viernes</th>
                      </tr> 
@@ -102,13 +105,29 @@
   
                   </div>             
   
-  
+ 
+ <div class="base-legenda ">
+     <fieldset> <legend>Leyenda:</legend>
+     <ul class="legenda">
+         <li>Conferencia: <span class="icon"> MAYÚSCULA</span></li>
+         <li>Clase Práctica:<span class="icon"> minúscula</span></li>
+         <li>Taller: <span class="icon">T</span></li>
+         <li>Seminario: <span class="icon"> S</span></li>
+         <li>Prueba Parcial:<span class="icon"> PP</span></li>
+         <li>Otras Actividades: <span class="icon">&</span></li>
+     </ul>     
+     </fieldset>
+ </div>
+ 
+ 
+ 
+ 
   
   
   <!--crear y eliminar turno con modal-->
   
   
-<!-- Modal de  Crear -->
+<!-- Modal de  Crear turno -->
 <div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -125,10 +144,8 @@
            <tr> 
                <td>
                 <label for="asignatura">Asignatura:</label>
-                <select name="asignatura" id="asignatura" class="form-control">
-                   {% for asig in asignaturas%}
-                    <option value="{{asig.id}}">{{asig.nombre}}</option>
-                   {%endfor%}                     
+                <select name="asignatura" id="lista_asignaturas" class="form-control">
+                                      
                 </select>
                 <label for="tipo">Tipo:</label>
                 
@@ -157,8 +174,30 @@
 </div> 
   
   
-  
-  
+ 
+<!--eliminar turno-->
+<div class="modal fade" id="modaleliminarturno" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Eliminar Turno</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 style = "text-align: center" >¿Desea eliminar este turno?</h4>
+             </div>
+             <div class="modal-footer">
+                <form id = "formularioeliminar" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <input type='submit' class='btn btn-default'  value='Eliminar' class='btn btn-primary'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                </form>
+               </div>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->  
   
   
   
@@ -167,8 +206,10 @@
            
  <!-- Datos para crear tabla-->           
  {% for object in lists %}
-  <h2 class="hidden datos"  name="{{object.fecha}}"></h2>
+  <h2 class="hidden datos" id="{{object.id}}"  name="{{object.fecha}}"></h2>
  {%endfor%}                
+ 
+ 
  
  {% block extra_js %}
   <script>
@@ -200,21 +241,21 @@
                 var turn="{{tr.turno}}";
                          
                 if ( parseInt(turn) == i && id == id2){
-                 var asignas="{{tr.id_asignatura_tipo.id_asignatura.nombre}}";
-                 var tip="{{tr.id_asignatura_tipo.id_tipo.nombre}}";
+                 var asignas="{{tr.id_asignatura.identificador}}";
+                 var tip="{{tr.id_tipo.nombre}}";
                  var format="";
-                 if (tip=="conferencia"){format=asignas.charAt(0).toUpperCase();}
-                 else if(tip=="clase práctica"){format=asignas.charAt(0).toLowerCase();}
-                 else if(tip=="laboratorio"){format="L"+asignas.charAt(0).toLowerCase();}
-                 else if(tip=="seminario"){format="S"+asignas.charAt(0).toLowerCase();} 
-                 else if(tip=="prueba parcial"){format="PP"+asignas.charAt(0).toUpperCase();}
-                 else if(tip=="proyecto de curso"){format="PC"+asignas.charAt(0).toLowerCase();} 
+                 if (tip=="conferencia"){format=asignas.toUpperCase();}
+                 else if(tip=="clase práctica"){format=asignas.toLowerCase();}
+                 else if(tip=="laboratorio"){format="L"+asignas.toLowerCase();}
+                 else if(tip=="seminario"){format="S"+asignas.toLowerCase();} 
+                 else if(tip=="prueba parcial"){format="PP"+asignas.toLowerCase();}
+                 else if(tip=="proyecto de curso"){format="PC"+asignas.toLowerCase();} 
                  
                  
                  else if(tip=="otras actividades"){format="&"+asignas.charAt(0).toLowerCase();}
-                 else if(tip=="taller"){format="T"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="taller"){format="T"+asignas.toLowerCase();}
                                    
-                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+" <a href=\"#\" style=\"color:red;\" name=\"{% url 'eliminar_turno' tr.id}}\"><span class=\"glyphicon glyphicon-remove\"></span></a></p></td></tr>");
+                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+" <a href=\"#\" style=\"color:red;\" name=\"{% url 'eliminar_turno' tr.id%}\" id=\"eliminar_turno\" ><span class=\"glyphicon glyphicon-remove\"></span></a></p></td></tr>");
                 br=true;
                 };
             {% endfor %}
@@ -229,7 +270,8 @@
          {%endfor%}
                    
           
-          $('#desde').append(oc[0].getAttribute('name'));
+          $('#desde').attr('value',oc[0].getAttribute('name'));
+          $('#desdesiem').attr('value',oc[0].getAttribute('id'));
           for(var h=1;h<=6;h++){
               $('#cont').append("<tr><th style=\"font-size:24px;\"class=\"\">"+h+"</th></tr>");
           }
@@ -249,17 +291,90 @@
             $('#dia').text(na[1]);
             $('#diaid').attr('value',na[2]);
             $('#nuevo').modal('show'); 
-         }); 
+         });
+         
+         //eliminar tuerno
+         $('a#eliminar_turno').click(function(){
+             var ac=$(this).attr('name');
+            $('#formularioeliminar').attr('action',ac);
+            $('#modaleliminarturno').modal('show');
+             
+         });
+         
+         
+          
           
       });
       
       
   </script>
   
+  <script>
+      jQuery(function($){
+          
+          $('#newasignatura').click(function(){
+             $('#nuevasasignaturas').modal('show');  
+          });
+          
+         
+          
+          
+          //lista de asignaturas
+       $('#asigna').attr('style','visibylity:visible');   
+       $.ajax({
+				 url:'/administracion/lista_asignaturas/{{seman.id_carrera_año.id}}',
+				 type:'GET',						
+				 data:null,
+				 success: function(data){
+                    
+                    $.each(data, function(index, objeto){
+                      $('#asignaturass').append("<li><a href=\"#\">"+objeto.nombre+"("+objeto.horas+")"+"</a></li>"); 
+                      $('#lista_asignaturas').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");
+                    });                        
+                     
+                     
+                 },
+                 error: function(err){
+				alert('error'+err.error);
+			},
+       }); 
+      });
+  </script>
   
-  
-  
- 
+  <script>
+      jQuery(function($){
+          
+                 
+         //if !=null(#cambio2)
+         fecha=$('#desdesiem');         
+         $('#fechass').keyup(function(e){
+             var valor= $('#desde');            
+            if(valor.val().trim()!="" && !valor.attr('readonly') && e.key=='Enter'){
+               $.ajax({
+                   url:'/administracion/cambiarfecha/',
+                   type:'POST',                   
+                   dataType:'json',                   
+                   data:{
+                       'id_fecha_antigua':fecha.val(),
+                       'fecha_actual':valor.val(),
+                       'id_carrera_año':'{{seman.id_carrera_año.id}}',
+                       csrfmiddlewaretoken:'{{csrf_token}}',
+                   },
+                   success:function(data){
+                       alert(data.informacion);
+                       
+                   },
+                   error: function(err){
+					alert('error'+err.error);
+				},
+               });
+            } 
+         });
+         
+         
+      });
+  </script>
+ <script src="{%static 'metro/js/metro.js'%}"></script>
  {% endblock%}
  
  {% endblock %}

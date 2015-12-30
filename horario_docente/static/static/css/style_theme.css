@@ -64,14 +64,14 @@ input.entrada{
 	background: rgba(120,110, 50 ,0.9);
 	height: 100vh;
 	z-index: 100;
-	box-shadow: 2px 0px 5px gray;
+	box-shadow: 3px 0px 5px gray;
 	
 }
 
 
 #contenidos{
 	margin-left: 5%;
-	margin-right: 2%;
+	margin-right: 5%;
 	margin-top:5%;
 }
 .cuerpo{
@@ -152,82 +152,45 @@ border: 1px solid gray;
 	
 }
 
+.nuevoProfesor{
+margin-left: 10px;
+padding: 10px;
+cursor: pointer;
+}
+.nuevoProfesor:hover{
+background: green;
+}
 
-
-.menu-lateral-dercho{
-	margin:0;
-	padding: 0;
-	padding-top: 2cm;
-	position: fixed;
-	top:0;	
-	width: 25%;
-	
-	right: -22%;
+.base-legenda{
+background: rgba(120,110, 50 ,0.9);
+margin: 5%;	
+}
+.base-legenda fieldset{
 	background: rgba(120,110, 50 ,0.9);
-	height: 100vh;
-	z-index: 100;
-	box-shadow: 2px 0px 5px gray;
 	
 }
 
-
-.menu-lateral-derecho ul{
-	left:0px;
-	cursor: pointer;
+.legenda{
 	
-	
-}
-.menu-lateral-dercho ul li>a.item{
-	padding-left:10px;
-	
-}
-.menu-lateral-derecho ul li ul li>a.items{
-	padding-left:5%;
-	
-}
-.menu-lateral-dercho ul li ul li ul li>a.items{
-	padding-left:10%;
+	padding: 5px;
 	
 }
 
-.menu-lateral-dercho ul li ul li ul li ul li>a.items{
-	padding-left:15%;
+.base-legenda legend{
+	background: rgb(120,110, 50);
+	text-shadow: 1px 2px 3px black;
+	color:white;
 	
 }
 
-.menu-lateral-dercho ul li ul li ul li ul li ul li>a.items{
-	padding-left:20%;
-	
-}
-
-.menu-lateral-dercho ul li span{
-	float:right;
-	right:0px;
-	color:darkgray;
-	font-size: 10px;
-}
-.menu-lateral-dercho ul{
-	padding:0px;
-	box-sizing: border-box;
-	list-style:none;
-	
-}
-
-.menu-lateral-derecho ul li a.items{
-	text-decoration: none;
-	width: 100%;
-	display: block;
+.legenda li{
+	margin-left: 15px;
+	padding: 5px;	
+	float: left;
 	color: white;
-	padding: 10px;
-	margin: 0px;
 	
-	
+	list-style: none;
 }
-.menu-lateral-derecho ul ul{
-	display: none;
-}
-.menu-lateral-dercho ul li a.items:hover{
-background: rgb(120,110, 50);
-border: 1px solid gray;	
-text-decoration: none;
+.legenda li .icon{
+	color:maroon;
 }

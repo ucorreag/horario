@@ -68,7 +68,7 @@ class Semana(models.Model):
 	desde=models.DateField()
 	hasta=models.DateField(editable=False)
 	numero=models.CharField(max_length=10, verbose_name="Numero de Semana")
-	id_año=models.ForeignKey(Año)
+	id_carrera_año=models.ForeignKey(CarreraAño)
 	id_carrera=models.ForeignKey(Carrera)
 	
 	def save(self):
@@ -138,8 +138,7 @@ class Asignatura(models.Model):
 	nombre=models.CharField(max_length=50)
 	identificador=models.CharField(max_length=10)
 	horas=models.IntegerField()
-	id_semestre=models.ForeignKey(Semestre)
-	id_carrera=models.ForeignKey(Carrera)
+	id_carrera_año=models.ForeignKey(CarreraAño)
 	
 	def __str__(self):
 		return self.nombre

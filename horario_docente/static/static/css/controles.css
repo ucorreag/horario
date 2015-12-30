@@ -1,0 +1,85 @@
+.input-control {
+  
+  min-height: 2.125rem;
+ 
+  position: relative;
+ 
+}
+.input-control[data-role=select] {
+  height: auto;
+}
+
+.input-control.text .button,
+.input-control.select .button,
+.input-control.file .button,
+.input-control.password .button,
+.input-control.number .button,
+.input-control.email .button,
+.input-control.tel .button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+}
+.input-control.text > label,
+.input-control.select > label,
+.input-control.file > label,
+.input-control.password > label,
+.input-control.number > label,
+.input-control.email > label,
+.input-control.tel > label,
+.input-control.text > .label,
+.input-control.select > .label,
+.input-control.file > .label,
+.input-control.password > .label,
+.input-control.number > .label,
+.input-control.email > .label,
+.input-control.tel > .label {
+  position: absolute;
+  left: 0;
+  top: -1rem;
+  font-size: .875rem;
+}
+.input-control.text > input:disabled + .button,
+.input-control.select > input:disabled + .button,
+.input-control.file > input:disabled + .button,
+.input-control.password > input:disabled + .button,
+.input-control.number > input:disabled + .button,
+.input-control.email > input:disabled + .button,
+.input-control.tel > input:disabled + .button {
+  display: none;
+}
+
+
+.input-control > .helper-button,
+.input-control > .button-group > .helper-button {
+  visibility: hidden;
+  margin: 0;
+  border: 0;
+  height: 30px;
+  padding: 0 .6rem;
+  z-index: 100;
+  font-size: .75rem;
+}
+.input-control > .button.helper-button {
+  margin: 2px 2px 0;
+}
+.input-control > .button-group > .button.helper-button {
+  margin: 2px 0 ;
+}
+.input-control > .button-group > .button.helper-button:last-child {
+  margin-right: 2px ;
+}
+.input-control input:focus ~ .helper-button,
+.input-control input:focus ~ .button-group > .helper-button {
+  visibility: visible;
+}
+.input-control input ~ .helper-button:active,
+.input-control input ~ .button-group > .helper-button:active {
+  visibility: visible;
+}
+.input-control input:disabled ~ .helper-button,
+.input-control input:disabled ~ .button-group > .helper-button {
+  display: none ;
+}

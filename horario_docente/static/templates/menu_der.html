@@ -1,136 +1,233 @@
  
+ <div class="nav navbar-right" style="background:black">
+     
+     <ul>
+         <li id="administradores">
+             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Planificadores</a><a href="#" id="newadmin" class="mif-files-empty fg-white"></a>
+             <ul id="administra">
+                 
+             </ul>
+         </li>
+         
+         <li id="professors">
+             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Profesores </a><a href="#" id="newprofessor" class="mif-files-empty fg-white nuevoProfesor "></a>
+             <ul id="profesores">
+                 
+             </ul>
+         </li>
+         <li id="asigna" style="visibility:hidden">
+             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Asignaturas </a><a href="#" id="newasignatura" class="mif-files-empty fg-white nuevaasignatura "></a>
+             <ul id="asignaturass">
+                 
+             </ul>
+         </li>
+     </ul>
+     
+ </div>
  
- <div class="menu-lateral-dercho modal-dialog" id="menu-der">
-	
-	<div class="cabecera navbar-left">
-              <input type="checkbox" id="activar-derecho" class="hidden">
-              <label for="activar-derecho" id="icono" class="navbar-left"><span class="mif-menu"></span></label>
+ <!--crear planificador-->
+ <div class="modal fade" id="crearplanificador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Crear Planificador</h4>
+             </div>
+             <form action="{%url 'crear_usuario'%}" method="POST">{%csrf_token%}
+               <div class="modal-body">
+                  
+                <label>Nombres:</label>
+                <input type="text" name="first_name" required="" placeholder="Nombre" class="form-control" "/><br>
             
-    </div> 
+               <label>Apellidos:</label>
+               <input type="text" name="last_name" required="" placeholder="Apellidos" class="form-control" "/>
+            
+              <label>Nombre de usuario:</label>
+              <input type="text" name="username" required="" placeholder="Nombre de usuario" class="form-control " required="required""/>
+            
+              <label>Correo web:</label>
+              <input type="email" required="" name="email" placeholder="usuario@uho.edu.cu" class="form-control""/>
+            <br>
 
-<div class="cuerpo">
-<div class="categ">
-	CATEGORIAS
-	 <a href="#" data-toggle="modal"  data-target="#crearfacultad" class="bloque mif-files-empty fg-white"></a>
-</div>	
-{%for facu in facultad%}
-<ul >	
-	<li class="sub"><a href="#" onclick="return false;" class="items">{{facu.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
-		<ul>
-			{%for facultadcate in facultadcategoria%}
-			{%if facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'pregrado' %}
-			<li class="sub"><a href="#" onclick="return false;" class="items">Pregrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" class="glyphicon glyphicon-file nuevito" data-toggle="modal" data-target="#crearcarrera"></span></a> 
-			
-			<ul>
-				{%for car in carreras%}
-				{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'pregrado'%}
-							
-				<li class="sub"><a href="#" onclick="return false;" class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
-					<ul>
-											
-						<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul>
-								{%for carreraa in carrerasaño%}
-			         	        {%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
-								<li>
-									<a href="#" id="carrera"name="{{carreraa.id_año.id}}" class="items">{{carreraa.id_año.nombre}}</a>
-								</li>
-								{%endif%}
-						        {%endfor%}
-							</ul>
-						</li>
-						<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul>
-								{%for carre in carrerasaño%}
-			         	        {%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
-								<li>									
-									<a href="#" class="items">{{carre.id_año.nombre}}</a>
-								</li>
-								{%endif%}
-						        {%endfor%}
-							</ul>
-						</li>
-						</ul>
-						</li>
-						{%endif%}
-						{%endfor%}
-						</ul>
-						</li>
-						{%else%}
-									
-						<li class="sub"><a href="#" onclick="return false;" class="items">Postgrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" class="glyphicon glyphicon-file nuevito" data-toggle="modal" data-target="#crearcarrera"></span></a> 
-						
-						<ul>
-							{%for car in carreras%}
-							{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'postgrado'%}
-										
-							<li class="sub"><a href="#" onclick="return false;" class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
-								<ul>
-														
-									<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
-										<ul>
-											{%for carreraa in carrerasaño%}
-											{%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
-											<li>
-												<a href="#" class="items">{{carreraa.id_año.nombre}}</a>
-											</li>
-											{%endif%}
-											{%endfor%}
-										</ul>
-									</li>
-									<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
-										<ul>
-											{%for carre in carrerasaño%}
-											{%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
-											<li>									
-												<a href="#" class="items">{{carre.id_año.nombre}}</a>
-											</li>
-											{%endif%}
-											{%endfor%}
-										</ul>
-									</li>
-						
-						</ul>
-						</li>
-												
-						{%endif%}
-						{%endfor%}
-					</ul>
-				</li>
-				
-				{%endif%}
-				{%endfor%}
-			</ul>			
-			
-			</li>		
-		</ul>
+                <label>Contraseña:</label>
+                <input type="password" name="" placeholder="Contraseña" class="form-control" required="required" id="pas"/><br>
+            
+            
+                <label>Repita la contraseña:</label>
+                <input type="password" name="password" placeholder="Repita la contraseña" class="form-control" required="required" id="repas"/><br>
+                
+                <div class="local-error" id="message-pass-error1" style="visibility:hidden"> Las contraseñas no coinciden</div>
+           
+               </div>
+			     <div class="modal-footer">
+                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+               
+			     </div>
+			    </form>               
+               
+              
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal --> 
 
-{%endfor%}
 
-</div>
+
+<!--crear profesor-->
+ <div class="modal fade" id="crearprofesor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Crear Profesor</h4>
+             </div>
+             <form action="{%url 'crear_profesor'%}" method="POST">{%csrf_token%}
+               <div id = "contenedor" class="modal-body">
+                   <label for="nombre">Nombre y Apellidos</label>
+                   <input type="text" class="form-control" id="nombre" name="nombre">
+                   <label for="titulo">Titulo</label>
+                   <input type="text" class="form-control" id="titulo" name="titulo">
+               
+               </div>
+			     <div class="modal-footer">
+                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+               
+			     </div>
+			    </form>
+               
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal --> 
  
-</div>
+<!--nueva asignatura-->
+<div class="modal fade" id="nuevasasignaturas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " align="center">Nueva Asignatura</h4>
+             </div>
+             <form id = "formulario" action= "{%url 'crear_asignatura'%}" method='POST'>
+                  {% csrf_token %}
+				    				  
+                    <div id = "contenedor" class="modal-body">
+						
+						<table class="table">
+							<tr>
+								<td class="col-lg-6">
+								<label for="nombre">Nombre:</label>
+								<input type="text" name="nombre" id="nombre" requerid="" class="form-control">
+								<div class="col-lg-6">
+                <label for="letra">Letra Asignada:</label>
+								<input type="text" required=""class="form-control" id="letra" name="identificador">
+								</div>
+                
+                <div class="col-lg-6">
+                <label for="horas">Horas totales:</label>
+								<input type="number" required=""class="form-control" id="horas" name="horas">
+								</div>
+                <label for="profesor">Profesor:</label>
+								<select name="profesor" id="profesorrr" class="form-control">
+									
+								</select>
+					  	</td>
+					  <td class="col-lg-6">
+						  <label for="carrera">Carrera:</label>
+						  <input id="carrera" type="text"value="{{seman.id_carrera.nombre}}" readonly class="form-control"/>
+						  <label for="anho">Año:</label>
+						  <input id="anho"type="text"value="{{seman.id_carrera_año.id_año.nombre}}" readonly class="form-control"/>
+						  <label for="semestre">Semestre:</label>
+						  <input type="text"value="{{seman.id_carrera_año.id_año.id_semestre.nombre}}" id="semestre" readonly class="form-control"/>
+					    <input type="number"value="{{seman.id_carrera_año.id}}"  class="hidden" name="id_carrera_año"/>
+					  
+            
+            </td>
+					  <tr>
+						  
+					</table>
+					</div>
+                    <div class="modal-footer">
+                        
+				  
+                  <input type='submit' class='btn btn-default'  value='Guardar'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                
+               </div>
+               </form>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+ 
 <script>
-	jQuery(function($){	
-		
-		var contador1=1;
-		$('#activar-derecho').click(function(){
-			if (contador1==1){
-				$('#menu-der').animate({
-					right:'0'
-				});
-				
-				contador1=0;
-			}else{
-				$('#menu-der').animate({
-					right:'-22%'
-				});
-				
-				contador1=1;
-			}
-		});	
-		
-		
-	});
+    jQuery(function($){
+             
+       $('#newprofessor').click(function(){       
+       $('#crearprofesor').modal('show');
+       });
+       
+        $('#newadmin').click(function(){       
+       $('#crearplanificador').modal('show');
+       });
+       //verificar contraseña
+       $('#repas').keyup(function(){  
+         var $pass = $('#pas').val();
+         var $repass = $('#repas').val();      
+         if($pass!=$repass){            
+         $('#message-pass-error1').attr('style','visibility: visible; color:red;'); 
+         }else{
+         $('#message-pass-error1').attr('style','visibility: hidden;'); 
+         }
+         });
+       
+       //planificadores
+       $.ajax({
+				 url:'/administracion/lista_usuarios/',
+				 type:'GET',						
+				 data:null,
+				 success: function(data){
+                    
+                    $.each(data, function(index, objeto){
+                      $('#administra').append("<li><a href=\"#\">"+objeto.usuario+"("+objeto.nombre+")"+"</a></li>"); 
+                    });                        
+                     
+                     
+                 },
+                 error: function(err){
+								alert('error'+err.error);
+			},
+       });
+       
+       
+       
+       //profesores
+        $.ajax({
+				 url:'/administracion/lista_profesores/',
+				 type:'GET',						
+				 data:null,
+				 success: function(data){
+                    
+                    $.each(data, function(index, objeto){
+                      $('#profesores').append("<li><a href=\"#\">"+objeto.nombre+"("+objeto.titulo+")</a></li>"); 
+                      $('#profesorrr').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");						  
+								
+                    });                        
+                     
+                     
+                 },
+                 error: function(err){
+								alert('error'+err.error);
+			},
+       });
+       
+       
+    });
 </script>

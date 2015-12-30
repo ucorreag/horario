@@ -5150,7 +5150,9 @@ $.widget("metro.input", {
 
         if (helper_clear) {
             helper_clear.on('click', function(){
+                input.removeAttr('readonly');
                 input.val('').trigger('change').focus();
+                
             });
         }
         if (helper_reveal && element.hasClass('password')) {

@@ -9,6 +9,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic import FormView
 from django.core.urlresolvers import reverse
 from apps.horario.models import *
+from .utiles import *
 from datetime import *
 from django.core.serializers import serialize
 import json
@@ -94,10 +95,6 @@ def crear_carrera(request, id):
 @login_required
 def user_create(request):
 
-    context = {
-        'p': _('Crear Planificador'),
-        
-        }
     if request.POST:
         username = request.POST['username']
         first_name = request.POST['first_name']
@@ -121,14 +118,9 @@ def user_create(request):
             user.is_staff=True
             user.is_superuser=True
             user.save()
-
-            return HttpResponseRedirect(reverse('lista_usuarios'))
-
-    return render_to_response(
-        'Crear_Usuario.html',
-        context,
-        RequestContext(request)
-    )
+        actual = request.META.get('HTTP_REFERER', None) or '/'
+        return  HttpResponseRedirect(actual) 
+           
 
 
 
@@ -172,32 +164,44 @@ def user_delete(request,id):
     e= User.objects.filter(id=id)
     e.delete()
     return HttpResponseRedirect(actual)
-    
+
+
+
+@login_required
+def crear_profesor(request):
+    if request.POST:
+       nombre=request.POST['nombre']
+       titulo=request.POST['titulo']
+       
+       try:
+           profesor=Profesor.objects.get(nombre=nombre,titulo=titulo)
+       except ObjectDoesNotExist:
+           profesor=Profesor(nombre=nombre, titulo=titulo)
+           profesor.save()
+       
+       actual = request.META.get('HTTP_REFERER', None) or '/'
+       return  HttpResponseRedirect(actual)    
+           
+                
+   
 @login_required   
 def profesor_list(request):
     users = Profesor.objects.all()
-    if request.POST:
-        users=Profesor.objects.filter(nombre=request.POST['nombre'])
-       
+    valores=[]
     
-    paginator = Paginator(users, 5)
-    page = request.GET.get('page')
-    try:
-        contacts = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        contacts = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        contacts = paginator.page(paginator.num_pages)
-    return render_to_response(
-         'Lista_profesor.html',
-         {             
-             'contacts':contacts,
-         },
-         RequestContext(request)
-    )
-
+    if users:
+        for us in users:        
+            dat={}
+            dat['nombre']=us.nombre
+            dat['titulo']=us.titulo
+            dat['id']=us.id
+            valores.append(dat)
+        
+    
+    datos=json.dumps(valores)
+    
+    
+    return HttpResponse(datos, content_type="application/json")
 
 
 
@@ -207,29 +211,21 @@ def profesor_list(request):
 @login_required   
 def user_list(request):
     users = User.objects.all()
-    if request.POST:
-        users=User.objects.filter(username=request.POST['usuario'])
+    valores=[]
     
+    if users:
+        for us in users:        
+            dat={}
+            dat['nombre']=us.first_name +" "+ us.last_name
+            dat['usuario']=us.username
+            valores.append(dat)
+        
     
+    datos=json.dumps(valores)    
     
-    paginator = Paginator(users, 5)
-    page = request.GET.get('page')
-    try:
-        contacts = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        contacts = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        contacts = paginator.page(paginator.num_pages)
-    return render_to_response(
-         'Lista_usuario.html',
-         {
-             
-             'contacts':contacts,
-         },
-         RequestContext(request)
-    )
+    return HttpResponse(datos, content_type="application/json")
+
+   
 
 @login_required
 def cambiarPassword(request):
@@ -254,67 +250,58 @@ def lista_carreras(request):
     
     return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
 
-
-    
-def lista_asignaturas(request, car, an, sem):
-       
-    carrera=Carrera.objects.get(id=car)
-    carann=CarreraAño.objects.filter(id_carrera=carrera.id)
-    
-   
-    anho=Año.objects.get(id=an)
-    semestr=Semestre.objects.get(nombre=sem, id_año=anho.id)
-    asignaturas=Asignatura.objects.filter(id_carrera=carrera.id, id_semestre=semestr.id)
-         
-     
-    profe=User.objects.filter(groups=2)
-        
-    if request.POST:
+def crear_asignatura(request):
+     if request.POST:
         nombre=request.POST['nombre']
         horas=request.POST['horas']
-        profesor=User.objects.get(id=int(request.POST['profesor']))
-        val=False
-        for asi in asignaturas:
-            if asi.nombre == nombre:
-                val=True
-        if val==False:             
+        identificador=request.POST['identificador']
+        id_carrera_año=request.POST['id_carrera_año']
+        id_profesor=request.POST['profesor']
+        profesor=Profesor.objects.get(id=id_profesor)
+        carrera_año=CarreraAño.objects.get(id=id_carrera_año)
+        
+        try:            
+            asig=Asignatura.objects.get(
+                id_profesor=id_profesor,
+                nombre=nombre,
+                horas=horas,
+                identificador=identificador,
+                id_carrera_año=id_carrera_año,
+            )
+        except ObjectDoesNotExist:
             asig=Asignatura(
                 id_profesor=profesor,
                 nombre=nombre,
                 horas=horas,
-                id_semestre=semestr,
-                id_carrera=carrera,            
+                identificador=identificador,
+                id_carrera_año=carrera_año,
                 )
             asig.save()
-            tp=Tipo.objects.all()
-            for ti in tp:
-                astip=AsignaturaTipo(id_asignatura=asig, id_tipo = ti)
-                astip.save()  
             
-            actual = request.META.get('HTTP_REFERER', None) or '/'
-            return  HttpResponseRedirect(actual)
+        actual = request.META.get('HTTP_REFERER', None) or '/'
+        return  HttpResponseRedirect(actual)
+            
+            
+ #id carrera_año   
+def lista_asignaturas(request,id):
+    asignaturas=Asignatura.objects.filter(id_carrera_año=id)
+    
+    valores=[]
+    for asignatura in asignaturas:
+        datos={}
+        datos['nombre']=asignatura.nombre
+        datos['identificador']=asignatura.identificador
+        datos['horas']=asignatura.horas
+        datos['id']=asignatura.id
+        
+        valores.append(datos)
+        
+    dato=json.dumps(valores)
      
-  
-    sem=Semana.objects.filter(id_carrera=car, id_semestre=semestr.id)
-    if sem:
-        semana=True
-    else:
-        semana=False
-    
+    return HttpResponse(dato, content_type="application/json")   
+                    
        
-    aux={
-        'carrerasaños':carann,
-        'carrera':carrera,
-        'profes':profe,
-        'asignaturas':asignaturas,
-        'año':anho,
-        'semestre':semestr,
-        'semana':semana,
-        }
-    
-    
-    return render_to_response('Lista_asignaturas.html',aux,RequestContext(request))
-    
+            
 
 def crear_semana(request):
     de=request.POST['desde'].split("-")
@@ -323,94 +310,60 @@ def crear_semana(request):
     a=int(de[2])
     
     numero=str(request.POST['numero'])
-    año=int(request.POST['año'])
+    carra=int(request.POST['año'])
     carrera=int(request.POST['carrera'])
-    an=Año.objects.get(id=año)
+    caa=CarreraAño.objects.get(id=carra)
     car=Carrera.objects.get(id=carrera)
+    can_sem=int(request.POST['cantidad_sem'])
     
     dt=date(d,m,a)
-    sem=Semana(
-        desde = dt,
-        numero=numero,
-        id_año=an,
-        id_carrera=car,
-        )
-        
+            
     try:   
-        semanas = Semana.objects.get(
+        sem = Semana.objects.get(
             desde = dt,
             numero=numero,
-            id_año=an,
+            id_carrera_año=carra,
             id_carrera=carrera,
             )
     except ObjectDoesNotExist:
+        sem=Semana(
+            desde = dt,
+            numero=numero,
+            id_carrera_año=caa,
+            id_carrera=car,
+            )
         sem.save()
-        aux=dt
-        dy=dt.day
-        mt=dt.month
-        yr=dt.year
-                       
+        
+        fch=dt                      
         smn=sem
-        for i in range(75):
-            print(date(yr,mt,dy))
-            if (i+1)%5 == 0:
-               
-                
+        cont=0        
+        can_sem=int(can_sem)*5
+        for i in range(can_sem):
+            dy=fch.day
+            mt=fch.month
+            yr=fch.year
+            
+            if cont == 5:
+                fch=calendar(dy,mt,yr,2) 
                 sm=Semana(
-                    desde=date(yr,mt,dy),
+                    desde=fch,
                     numero=int((i+1)/5)+1,
-                    id_año=an,
-                    id_carrera=car,                    
+                    id_carrera_año=caa,
+                    id_carrera=car,
                     )
+                    
                 sm.save() 
-                smn=sm            
-                dy+=2
-            dy+=1
-            if mt==1 and dy>31:
-                dy=1
-                mt=2
-            elif mt==2 and dy>29:
-                dy=1
-                mt=3
-            elif mt==3 and dy>31:
-                dy=1
-                mt=4
-            elif mt==4 and dy>30:
-                dy=1
-                mt=5
-            elif mt==5 and dy>31:
-                dy=1
-                mt=6
-            elif mt==6 and dy>30:
-                dy=1
-                mt=7
-            elif m==7 and dy>31:
-                dy=1
-                mt=8
-            elif mt==8 and dy>31:
-                dy=1
-                mt=9
-            elif mt==9 and dy>30:
-                dy=1
-                mt=10
-            elif mt==10 and dy>31:
-                dy=1
-                mt=11
-            elif mt==11 and dy>30:
-                dy=1
-                mt=12
-            elif mt==12 and dy>31:
-                dy=1
-                mt=1
-                yr+=1 
-                
-                                    
-            fch=date(yr,mt,dy)    
+                smn=sm 
+                dy=fch.day
+                mt=fch.month
+                yr=fch.year
+                cont=0                                    
+              
             dias=Dia(fecha=fch, id_semana=smn)
             dias.save()
-                    
-        
-    
+            fch=calendar(dy,mt,yr,1)
+            cont+=1
+                
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
      
@@ -445,7 +398,7 @@ def eliminar_carrera(request,id):
  
 #id año        
 def crear_horario(request, id):
-    smna=Semana.objects.filter(id_año=id)
+    smna=Semana.objects.filter(id_carrera_año=id)
     
     x=None
     if smna !=[]:
@@ -469,8 +422,7 @@ def crear_horario(request, id):
     isturno=False    
     if turnos !=[]:
         isturno=True
-        
-    print(isturno)    
+      
     #aux=""
     #lists = [[] for i in range(1,91)]
     #for li in lists:
@@ -479,7 +431,7 @@ def crear_horario(request, id):
     #    li.append(aux)
     #    aux=""
     
-    asignaturas=Asignatura.objects.filter(id_semestre=id)
+    asignaturas=Asignatura.objects.filter(id_carrera_año=id)
     tipos=Tipo.objects.all()   
         
     paginator = Paginator(dias, 5)
@@ -533,11 +485,11 @@ def crear_turno(request):
     tn=str(request.POST['turnoo'])
     dia=Dia.objects.get(id=di)
     
-        
-    at=AsignaturaTipo.objects.get(id_asignatura=asignatura, id_tipo=tipo)
-        
-    tur=Turno(id_dia=dia,id_asignatura_tipo=at,turno=tn)
-    tur.save()
+    try:
+        tur=Turno.objects.get(id_dia=di,id_asignatura=asigna_id,id_tipo=tip_id,turno=tn)
+    except ObjectDoesNotExist:
+        tur=Turno(id_dia=dia,id_asignatura=asignatura,id_tipo=tipo,turno=tn)
+        tur.save()
     
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
@@ -569,7 +521,7 @@ def crear_facultad(request):
 def is_semana(request):
     if request.is_ajax:
         id_an=int(request.GET['id'])
-        sem=Semana.objects.filter(id_año=id_an)
+        sem=Semana.objects.filter(id_carrera_año=id_an)
         
         semanas=False
         if sem:
@@ -578,7 +530,7 @@ def is_semana(request):
         aux={'semana':semanas}
         
         dato=json.dumps(aux)
-        print(semanas)
+        
         return HttpResponse(dato, content_type="application/json")
         
     else:
@@ -590,18 +542,17 @@ def is_semana(request):
 def infomacion_preimera_semana(request):
     if request.is_ajax:
                
-        id_an=int(request.GET['id'])
-        an=Año.objects.get(id=id_an)
-        semestre = Semestre.objects.get(id=an.id_semestre.id)
+        id_ca=int(request.GET['id'])
+        ca=CarreraAño.objects.get(id=id_ca)
+        anhos=Año.objects.get(id=ca.id_año.id)
+        semestre = Semestre.objects.get(id=anhos.id_semestre.id)
         
-        car=CarreraAño.objects.filter(id_año=id_an)
-        carA=car[0]        
-        carrn=carA.id_carrera.nombre
-        carrid=carA.id_carrera.id
+        carrn=ca.id_carrera.nombre
+        carrid=ca.id_carrera.id
         
         datos={
-            'año':an.nombre,
-            'año_id':id_an,
+            
+            'año_id':id_ca,
             'semestre':semestre.nombre,
             'carrera_nombre':carrn,
             'carrera_id':carrid,
@@ -613,3 +564,68 @@ def infomacion_preimera_semana(request):
         
     else:
         raise Http404   
+        
+def isLunes(request):
+    valor=request.GET['dato']    
+    valor=valor.split('-')
+     
+    dia=dias_semana(int(valor[2]), int(valor[1]), int(valor[0]))
+    
+    dato=False
+    if dia=='Lunes':
+        dato=True
+        
+    datos={
+        'islunes':dato,
+    } 
+    datoss=json.dumps(datos)
+    return HttpResponse(datoss, content_type="application/json")
+        
+       
+def cambiar_fecha(request):
+    id_fecha_antigua=int(request.POST['id_fecha_antigua'] )  
+    fecha_actual=request.POST['fecha_actual']
+    id_carrera_año=int(request.POST['id_carrera_año'])
+    
+    fecha=fecha_actual.split('-')
+    
+    fechaac=date(int(fecha[0]),int(fecha[1]),int(fecha[2]))
+    
+    
+    dia=Dia.objects.get(id=id_fecha_antigua) 
+    numero_semana_primero=dia.id_semana.numero
+      
+    semana=Semana.objects.filter(id_carrera_año=id_carrera_año)
+    
+    dias_cambiar=[]
+    for sem in semana:
+        if sem.numero >=  numero_semana_primero:
+            dias_cambiar+=Dia.objects.filter(id_semana=sem.id)
+    
+       
+    resta=abs(fechaac - dia.fecha)
+    resta=resta.days    
+    
+    
+    for d in dias_cambiar:
+        f=calendar(d.fecha.day, d.fecha.month, d.fecha.year, resta)
+        print(f)
+        d=Dia(id=d.id,fecha=f,id_semana=d.id_semana)
+        d.save()
+        
+        
+    datos={
+        'informacion':'Fecha Cambiada',
+    } 
+    datoss=json.dumps(datos)
+    return HttpResponse(datoss, content_type="application/json")
+            
+    
+    
+def eliminar_turno(request, id):
+    tur=Turno.objects.get(id=id)
+    tur.delete()
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+                
