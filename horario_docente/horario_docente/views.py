@@ -9,26 +9,26 @@ from apps.horario.models import *
 def index_view(request):
     if str(Semestre.objects.all()) == "[]":
                
-        ps=Semestre(nombre='primero')
+        ps=Semestre(nombre='Primero')
         ps.save()
-        sg=Semestre(nombre='segundo')
+        sg=Semestre(nombre='Segundo')
         sg.save()
     
         semestre=Semestre.objects.all()
         for sem in semestre:
-            pr=Año(nombre='primero', id_semestre=sem)
+            pr=Año(nombre='Primero', id_semestre=sem)
             pr.save()
-            seg=Año(nombre='segundo',id_semestre=sem)
+            seg=Año(nombre='Segundo',id_semestre=sem)
             seg.save()
-            ter=Año(nombre='tercero', id_semestre=sem)
+            ter=Año(nombre='Tercero', id_semestre=sem)
             ter.save()
-            cuar=Año(nombre='cuarto', id_semestre=sem)
+            cuar=Año(nombre='Cuarto', id_semestre=sem)
             cuar.save()
-            quin=Año(nombre='quinto', id_semestre=sem)
+            quin=Año(nombre='Quinto', id_semestre=sem)
             quin.save()
             
-        categ1=Categoria(nombre="pregrado")
-        categ2=Categoria(nombre="postgrado")
+        categ1=Categoria(nombre="Pregrado")
+        categ2=Categoria(nombre="Postgrado")
         categ1.save()
         categ2.save()
         

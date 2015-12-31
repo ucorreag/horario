@@ -21,9 +21,7 @@ from .utiles import login_required
 #Se han hecho cambios en este m'etodo respecto al oriiginal
 def login(request):   
     next =  '/'
-    context_dict = {
-        'page_title': _('Entrar'),
-        }
+    
 
     if request.POST:
         username = request.POST['username']
@@ -34,12 +32,9 @@ def login(request):
             django_login(request, user)
             User.objects.get(username=username)
             return HttpResponseRedirect(next)
-        else:
-            context_dict['error'] = _('Usuario o contraseña incorrectos')
-            
-    return render_to_response('login.html', context_dict, RequestContext(request))
-
-
+       
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
 
 @login_required
 def logout(request):
@@ -471,9 +466,11 @@ def crear_horario(request, id):
          'usuarios':usuarios,
          'semana':semana,
           }
-    
-    return render_to_response('crear_horario.html',auxi,RequestContext(request)) 
-    
+    if request.user.is_authenticated():
+        return render_to_response('crear_horario.html',auxi,RequestContext(request))
+    else:
+        return render_to_response('vista_horario.html',auxi,RequestContext(request))      
+    #crear horario ver
     
 def crear_turno(request):
     asigna_id=int(request.POST['asignatura'])

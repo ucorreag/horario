@@ -1,28 +1,34 @@
  
- <div class="nav navbar-right" style="background:black">
-     
+ <div class="menu_derecha modal-dialog">
+   <div class="">
+              <input type="checkbox" id="activar-derecha" class="hidden">
+              <label for="activar-derecha" id="icono-derecha"><span class="mif-menu"></span></label>
+            
+    </div> 
+   
+    <div class="cuerpos"> 
      <ul>
          <li id="administradores">
-             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Planificadores</a><a href="#" id="newadmin" class="mif-files-empty fg-white"></a>
+             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Planificadores</a><a href="#" id="newadmin" class="mif-files-empty fg-white"></a>
              <ul id="administra">
                  
              </ul>
          </li>
          
          <li id="professors">
-             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Profesores </a><a href="#" id="newprofessor" class="mif-files-empty fg-white nuevoProfesor "></a>
+             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Profesores </a><a href="#" id="newprofessor" class="mif-files-empty fg-white nuevoProfesor "></a>
              <ul id="profesores">
                  
              </ul>
          </li>
          <li id="asigna" style="visibility:hidden">
-             <a href="#" onclick="return false;"><span class="mif-organization fg-white"></span>Asignaturas </a><a href="#" id="newasignatura" class="mif-files-empty fg-white nuevaasignatura "></a>
+             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Asignaturas </a><a href="#" id="newasignatura" class="mif-files-empty fg-white nuevaasignatura "></a>
              <ul id="asignaturass">
                  
              </ul>
          </li>
      </ul>
-     
+     </div>
  </div>
  
  <!--crear planificador-->
@@ -177,6 +183,7 @@
         $('#newadmin').click(function(){       
        $('#crearplanificador').modal('show');
        });
+       
        //verificar contraseña
        $('#repas').keyup(function(){  
          var $pass = $('#pas').val();
@@ -196,7 +203,7 @@
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                      $('#administra').append("<li><a href=\"#\">"+objeto.usuario+"("+objeto.nombre+")"+"</a></li>"); 
+                      $('#administra').append("<li><a href=\"#\" class=\"item\">"+objeto.usuario+"("+objeto.nombre+")"+"</a></li>"); 
                     });                        
                      
                      
@@ -216,7 +223,7 @@
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                      $('#profesores').append("<li><a href=\"#\">"+objeto.nombre+"("+objeto.titulo+")</a></li>"); 
+                      $('#profesores').append("<li><a href=\"#\"class=\"item\">"+objeto.nombre+"("+objeto.titulo+")</a></li>"); 
                       $('#profesorrr').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");						  
 								
                     });                        
@@ -228,6 +235,26 @@
 			},
        });
        
+      
+      
+      var contador=1;
+		$('#activar-derecha').click(function(){
+			if (contador==1){
+				$('.menu_derecha').animate({
+					right:'0'
+				});
+				
+				contador=0;
+			}else{
+				$('.menu_derecha').animate({
+					right:'-350px'
+				});
+				
+				contador=1;
+			}
+		});
+      
+      
        
     });
 </script>

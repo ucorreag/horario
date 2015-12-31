@@ -11,6 +11,8 @@
      <link href="{% static 'metro/css/metro-icons.css' %}" rel="stylesheet">
       <link href="{% static 'css/normalize.css' %}" rel="stylesheet">  
      
+     <link rel="stylesheet" href="{%static 'css/controles.css'%}">
+
       <link rel="stylesheet" href="{% static 'css/style_theme.css'%}"> 
 	   {% block style%}{%endblock%}
 	          
@@ -21,6 +23,8 @@
       <div class="modal-header">
 	 {% if  user.is_superuser %}
         {%include 'planificador.html' %}
+       {%else%}
+        {%include 'menu-sidebar.html' %}
        {% endif %}
        </div>
        <div class="" style="margin-top:2%;"> 
@@ -36,13 +40,16 @@
       
       </div>
        <div class="" style="margin-top:2%;"> 
-      {% include 'menu_der.html'%}
+      {% if  user.is_superuser %}
+        {% include 'menu_der.html'%}
+       {%endif%}       
+      
       </div>
       </div>      
      <script src="{% static 'js/modernizr-2.0.6.min.js'%}"></script>
      <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.js' %}"></script>
      <script src="{% static 'js/script.js'%}"></script>
-     
+     <script src="{%static 'metro/js/metro.js'%}"></script>
      
       {% block js %}{% endblock %} 
      

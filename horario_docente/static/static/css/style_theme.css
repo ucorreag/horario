@@ -26,9 +26,8 @@ input.entrada{
 	cursor: pointer;
 	margin-right: 1%;
 	top: 0px;
-	z-index: 200;
-	
-	
+	z-index: 200;	
+	float: right;
 	 
 }
 .cabecera{
@@ -59,8 +58,8 @@ input.entrada{
 	padding-top: 2cm;
 	position: fixed;
 	top:0;	
-	width: 25.5%;
-	left: -22%;
+	width: 400px;
+	left:-350px;
 	background: rgba(120,110, 50 ,0.9);
 	height: 100vh;
 	z-index: 100;
@@ -76,7 +75,15 @@ input.entrada{
 }
 .cuerpo{
 	width: 85%;
-    
+	margin-right: 10%;
+	height: 100%;
+	
+	overflow-y:scroll ;	
+	-webkit-overflow-y:-webkit-scroll ;
+	-o-overflow-y:-o-scroll ;
+    -moz-overflow-y:-moz-scroll ;
+		
+	
 	
 }
 
@@ -152,14 +159,65 @@ border: 1px solid gray;
 	
 }
 
+.menu_derecha{
+	margin:0;
+	padding: 0;
+	padding-top: 2cm;
+	position: fixed;
+	top:0;	
+	width: 400px;
+	right:-350px;
+	background: rgba(120,110, 50 ,0.9);
+	height: 100vh;
+	z-index: 100;
+	box-shadow: -3px 0px 5px gray;
+	
+	
+}
+.menu_derecha li{
+list-style: none;
+	
+}
+
+
+.menu_derecha a.item{
+	color: white;
+	text-decoration: none;
+}
+
+newadmin, newprofesor, newasignatura{
+	float: right;
+}
+
+#icono-derecha{
+	position: relative;
+	color:white;
+	font-size: 30px;
+	cursor: pointer;
+	margin-left: 5px;
+	float: left;
+	top: 0px;
+	z-index: 200;
+	 
+}
+.cuerpos{
+	width: 90%;
+	margin-left: 10%;
+	overflow:auto;
+	overflow-y:scroll;	
+	-webkit-overflow-y:-webkit-scroll;
+	-o-overflow-y:-o-scroll;
+    -moz-overflow-y:-moz-scroll;
+	
+	height: 100%;
+}
+
 .nuevoProfesor{
 margin-left: 10px;
 padding: 10px;
 cursor: pointer;
 }
-.nuevoProfesor:hover{
-background: green;
-}
+
 
 .base-legenda{
 background: rgba(120,110, 50 ,0.9);
@@ -193,4 +251,28 @@ margin: 5%;
 }
 .legenda li .icon{
 	color:maroon;
+}
+
+.vista{
+	margin-left: 20px;
+	
+}
+.vista .table{
+	width: 100%;
+}
+.menus{
+
+	padding: 0;	
+}
+
+.menus li{
+	list-style: none;
+	margin:0;
+	padding: 0;
+}
+.menus li a{
+	text-decoration: none;
+	margin:0;
+	padding: 0;
+	color:black;	
 }

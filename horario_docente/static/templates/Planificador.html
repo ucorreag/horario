@@ -1,32 +1,32 @@
  {% load staticfiles %}
-<div class="navbar navbar-inverse navbar-fixed-top theme_border">
-
-           <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"> </span>
-                    <span class="icon-bar"> </span>
-                    <span class="icon-bar"> </span>
-                </button>
+<div class="navbar  navbar-fixed-top theme_border">
+<div class="app-bar navbar-inverse"> 
+           
+                
             <a class="navbar-brand" href="/" >Horario Docente</a>
-           </div>
-            <div class="navbar-collapse collapse">
-                 
-                                   
-         <ul class="nav navbar-nav navbar-right" style="margin-right: 5%">
-            <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-cog"> </span><b class="caret"> </b></a>
+           
+                     
+            
+            <div class="app-bar-element place-right " style="margin-right:10px">
+                       
+                       <a class="dropdown-toggle fg-white"> <span class="glyphicon glyphicon-cog"> </span></a>
 
-           <ul class="dropdown-menu">
-             <li><a href="#" class="detallesplanificador" name="{{user.id}}" data-toggle="modal" data-target="#detallesplanificador" title="Usuario Actual"><span class="glyphicon glyphicon-user"> </span> : {{ user.username }}</a></li>
-               <li><a href="#" data-toggle="modal" data-target="#cambiando">Cambiar contraseña</a></li>
+                        <div class="app-bar-drop-container bg-white fg-dark place-right"
+                         data-role="dropdown" data-no-close="true">
+                          <div class="padding20">
+                                    
+                                <ul class="menus">
+                                <li><a href="#" class="detallesplanificador" name="{{user.id}}" title="Usuario Actual"><span class="glyphicon glyphicon-user"> </span> : {{ user.username }}</a></li>
+                                <li><a href="#" id="cambiando-pass">Cambiar contraseña</a></li>
 
-                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-off"> </span> Salir</a></li>
-                 </ul>
-               </li>
-              </ul>
+                                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-off"> </span> Salir</a></li>
+                            </ul>
+               
             </div><!--/.nav-collapse -->
         </div>
-        
+        </div>
+        </div>
+        </div>
 
 {%include 'Detalles_Usuario.html'%}
 {%include 'CambiarPassword.html'%}

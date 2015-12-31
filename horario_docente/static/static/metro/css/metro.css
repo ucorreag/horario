@@ -5033,7 +5033,7 @@ a.tag {
 }
 .app-bar .app-bar-element:hover,
 .app-bar .app-bar-element:active {
-  background-color: #005696;
+  background: rgb(120,110,50);
 }
 .app-bar .app-bar-element.branding {
   padding-left: 1rem;
@@ -5236,7 +5236,7 @@ a.tag {
   top: 100%;
   left: 0;
   margin-top: 10px;
-  border: 2px solid #005696;
+  border: 1px solid rgb(120,110, 50);;
   background: #ffffff;
 }
 .app-bar .app-bar-drop-container:before {

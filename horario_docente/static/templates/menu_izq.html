@@ -2,9 +2,9 @@
  
  <div class="menu-lateral modal-dialog" id="menu-lat">
 	
-	<div class="cabecera navbar-right">
+	<div class="">
               <input type="checkbox" id="activar" class="hidden">
-              <label for="activar" id="icono" class="navbar-right"><span class="mif-menu"></span></label>
+              <label for="activar" id="icono" class=""><span class="mif-menu"></span></label>
             
     </div> 
 
@@ -203,7 +203,7 @@
 				 type:'GET',						
 				 data:{'id':texto},
 				 success: function(data){
-							 
+				{% if  user.is_superuser %}			 
 				if(!data.semana){				
 											
 						$.ajax({
@@ -226,6 +226,7 @@
 				
 						$('#horarios').modal('show');
 				}
+				{%endif%}
 							 
 				 	
 				 },
@@ -250,7 +251,7 @@
 				contador=0;
 			}else{
 				$('#menu-lat').animate({
-					left:'-22%'
+					left:'-350px'
 				});
 				
 				contador=1;
