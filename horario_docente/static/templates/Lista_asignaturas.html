@@ -20,24 +20,26 @@
 				<tr class="active"><th colspan="4">
 				
 				
-				<div class="btn-group col-lg-3">
+				<div class="btn-group col-lg-1">
 					<a href="#" onclick="return false;" class=" btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="
-                    glyphicon glyphicon-th-list"  aria-hidden="true" ></span>
+					<span class="glyphicon glyphicon-th-list"  aria-hidden="true" ></span>
 					</a>
 					<ul class="dropdown-menu">
 						{%for año in carrerasaños%}
-						<li>
-							<a href="#">{{año.id_año.nombre}}</a>
-							<ul>
-								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'primero'%}">Primer Semestre</a></li>
-								<li><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'segundo'%}">Segundo Semestre</a></li>
-							</ul>
+						<li class="disabled" style="background:#866000">
+							<a href="#" onclick="return false;" class="">{{año.id_año.nombre}} año</a>
+							
+								<li class="dropdown-item"><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'primero'%}">Primer Semestre</a></li>
+								<li class="dropdown-item"><a href="{%url 'lista_asignaturas' carrera.id año.id_año.id 'segundo'%}">Segundo Semestre</a></li>
+							
 						</li>	
 						{% endfor %}
 					</ul>
 					</div>
-					<h4 class="col-lg-3">Año:{{año.nombre}}</h4><h5 class="col-lg-3">Semetre:{{semestre.nombre}}</h5>				
+					<h4 class="col-lg-3">Año:{{año.nombre}}</h4><h4 class="col-lg-3">Semestre:{{semestre.nombre}}</h4>
+					<h4 class="col-lg-2"><a href="#" name="{% url 'horario' semestre.id %}" id="horario"><span class="glyphicon glyphicon-list-alt" title="horario"></span></a></h4>
+					
+									
 					<a data-toggle="modal" href="#" onclick="return false;" data-target="#nuevaAsignatura" class="btn glyphicon glyphicon-plus col-lg-3"> Añadir Asignatura</a>
 					</th>
 					
@@ -57,7 +59,7 @@
 							<td>{{asignatura.horas}}</td>
 							<td >
 								
-								<a href="#" onclick="return false;" name="{% url 'eliminar_asignatura' asignatura.id %}" id="eliminar"><span class="glyphicon glyphicon-trash" title="eliminar"></span></a>
+							    <a href="#" onclick="return false;" name="{% url 'eliminar_asignatura' asignatura.id %}" id="eliminar"><span class="glyphicon glyphicon-trash" title="eliminar"></span></a>
 							    <h2 class="hidden">¿Desea Eliminar {{asignatura.nombre}}?</h2>
 							</td>
 							</tr>
@@ -157,11 +159,67 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!--horario-->
+
+ <div class="modal fade" id="horarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Crear Horario</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 id="texto" style = "text-align: center" >No hay un horario para este semestre,¿Desea Crearlo? </h4>
+             </div>
+             
+                <form id = "forh" action= "{% url 'crear_semana'%}" method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+			      <div class="modal-body">  
+				  <label for="nm">Fecha de inicio de la Primera semana:</label>
+				  <input type="date" name="desde" id="nm" class="form-control">
+				  <label for="">Numero de semana:</label>
+				  <input type="text" id=""name="numero" readonly value="01" class="form-control">
+				  <label for="">Semestre:</label>
+          <input type="text" id="" readonly value="{{semestre.nombre}}" class="form-control">
+				  <input type="text" id="" name="semestre" class="hidden" value="{{semestre.id}}">
+				  <label for="">Carrera:</label>
+				  <input type="text" id="" readonly value="{{carrera.nombre}}" class="form-control">
+				  <input type="text" name="carrera" id="" value="{{carrera.id}}" class="hidden">
+			     </div>
+			     <div class="modal-footer">
+                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+               
+			     </div>
+			    </form>
+               
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 
 {% block extra_js %}
 <script>
+         jQuery(function($){
+             $('a#horario').click(function(){
+               var $texto= $(this).attr('name');
+			   {% if semana %}
+			   $(this).attr('href',$texto);
+			   {% else %}
+               $('#horarios').modal('show');
+         {%endif%}
+             });
+             
+         });
+         
+     </script>
+	 
+	 
+	 <script>
          jQuery(function($){
              $('a#eliminar').click(function(){
                var $texto= $(this).next().text();
@@ -174,6 +232,9 @@
          });
          
      </script>
+	 
+	 
+	 
  
  {% endblock%}
 

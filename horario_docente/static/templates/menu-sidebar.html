@@ -1,0 +1,40 @@
+ {% load staticfiles %}
+
+
+<div class="navbar  navbar-fixed-top theme_border">
+ <div class="app-bar navbar-inverse">
+           
+            <a class="navbar-brand" href="/" >Horario Docente</a>
+           
+             <div class="app-bar-element place-right">
+                       <a class="dropdown-toggle fg-white"><span class="mif-enter"></span> Enter</a>
+                        <div class="app-bar-drop-container bg-white fg-dark place-right"
+                         data-role="dropdown" data-no-close="true">
+                          <div class="padding20">
+                          <form action="{%url 'login'%}" method="POST">{%csrf_token%}
+                            <h4 class="text-light">Ingrese a modo planificador...</h4>
+                            
+                            <div class="input-control text">
+                            <span class="mif-user prepend-icon"></span>
+                            <input type="text" name="username" required="">
+                             </div>
+                             
+                             <div class="input-control text">
+                             <span class="mif-lock prepend-icon"></span>
+                             <input type="password" name="password" required="">
+                             </div>
+                                                          
+                             <div class="form-actions" align="right">
+                             <input type="submit" class="button" value="Entrar"/>
+                             </div>
+                             </form>
+                             
+                             </div>
+                             </div>
+                             </div>
+                        </div>
+           
+           
+        </div>
+  
+

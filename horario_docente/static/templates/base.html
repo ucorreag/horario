@@ -6,33 +6,53 @@
 	<title></title>
 	
 	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
-      <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+      <link href="{% static 'bootstrap-3.3.6-dist/css/bootstrap.css' %}" rel="stylesheet">
+     
+     <link href="{% static 'metro/css/metro-icons.css' %}" rel="stylesheet">
       <link href="{% static 'css/normalize.css' %}" rel="stylesheet">  
+     
+     <link rel="stylesheet" href="{%static 'css/controles.css'%}">
+
       <link rel="stylesheet" href="{% static 'css/style_theme.css'%}"> 
 	   {% block style%}{%endblock%}
 	          
      <script src="{% static 'js/jquery.js' %}"></script>	
-	
+     <script src="{% static 'js/jquery.form.js' %}"></script>    	
 </head>
 <body>
       <div class="modal-header">
-	 {% if   user.is_active and user.is_superuser %}
+	 {% if  user.is_superuser %}
         {%include 'planificador.html' %}
+       {%else%}
+        {%include 'menu-sidebar.html' %}
        {% endif %}
        </div>
-       <br>
-       <div class="modal-body">
+       <div class="" style="margin-top:2%;"> 
+                   
+                 
+       {% include 'menu_izq.html'%}
+       
+       <div class="modal-body"  id="contenidos">
       {% block content %}
       
+      
       {% endblock %}
+      
       </div>
-      </section>       
+       <div class="" style="margin-top:2%;"> 
+      {% if  user.is_superuser %}
+        {% include 'menu_der.html'%}
+       {%endif%}       
+      
+      </div>
+      </div>      
      <script src="{% static 'js/modernizr-2.0.6.min.js'%}"></script>
-     <script src="{% static 'js/bootstrap.js' %}"></script>
-     
+     <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.js' %}"></script>
+     <script src="{% static 'js/script.js'%}"></script>
+     <script src="{%static 'metro/js/metro.js'%}"></script>
      
       {% block js %}{% endblock %} 
-	 
+     
       
 </body>
 </html>

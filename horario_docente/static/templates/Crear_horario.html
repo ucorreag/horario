@@ -1,0 +1,374 @@
+{% extends 'base.html'%}
+{%load staticfiles%}
+{% block content %}
+
+ <div class="panel panel-default">
+   <nav class="navbars navbar-inverse theme_border">
+        <div class="form-horizontal" >
+               <h4 class="text-center" style="color: #f6faff">
+                                         Crear Horario Docente
+                
+                 </h4>
+         </div>
+    </nav>
+	   
+    <form method="post">{% csrf_token %}
+            <table class="table">
+                <tr>
+                    <td>                               
+                     <b>Fecha de Incio:</b><br>
+                     <div class="input-control text" id="fechass" data-role="input">
+                    <input type="text" placeholder="2016-12-31" required readonly class="active form-control" id="desde">
+                     <button class="button helper-button clear">
+                     <span class="mif-cross"></span></button>                    
+                    </div>                    
+                    <input type="date" id="desdesiem" class="hidden">                   
+                    
+                   </td>    
+                    
+                     <td class=""colspan="2"> <label for="carrera">Carrera:</label><input readonly id="carrera" type="text" class="form-control" value="{{seman.id_carrera.nombre}}"></td>
+                     
+                     <td class=""><label for="semana">N° de Semana:</label><input  id="semana" type="text" class="form-control" readonly value="{{ lists.number }}"></td>
+                     <td class=""><label for="año">Año:</label><input  id="año" readonly type="text" class="form-control" value="{{seman.id_carrera_año.id_año.nombre}}"></td>
+                     <td class=""><label for="semestre">Semestre:</label><input  id="semestre" readonly type="text" class="form-control" value="{{seman.id_carrera_año.id_año.id_semestre.nombre}}"></td>
+                     
+                </tr> 
+                </table>
+                
+                  <table class="table">
+                   <thead class="thead-inverse">                    
+                    <tr class="active" >   
+                       <th class="col-lg-2">Turno</th>
+                       <th class="col-lg-2">Lunes</th>
+                       <th class="col-lg-2">Martes</th>
+                       <th class="col-lg-2">Miércoles</th>
+                       <th class="col-lg-2">Jueves</th>
+                       <th class="col-lg-2">Viernes</th>
+                     </tr> 
+                     </thead>
+                     <tbody id="body">
+                        <tr>
+                            <td >
+                                <table class="table" id="cont"></table>                                
+                            </td>
+                            <td >
+                                <table class="table" id="primero"></table>  
+                            </td>
+                            <td >
+                                <table class="table" id="segundo"></table>
+                            </td>
+                            <td >
+                                 <table class="table" id="tercero"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="cuarto"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="quinto"></table>
+                            </td>
+                            </tr>
+                                            
+                         
+                         
+                     </tbody>    
+                  </table>
+                  
+                  </form>
+                  </div>
+                   <div>
+                        <ul class="paginador pager">
+                        <span class="step-links">
+                            {% if lists.has_previous %}
+                                <li><a  class="" href="?page={{ lists.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                            <li class="disabled"><a  class="btn" href="?page={{ 0 }}">&laquo;</a></li>
+                            {% endif %}
+                        <li> <span class="">
+                                <b> </b>  Semana {{ lists.number }} de {{ lists.paginator.num_pages }}.
+                                
+                            </span></li>
+                            {% if lists.has_next %}
+                                <li><a  class="" href="?page={{ lists.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><a  class="btn" href="?page={{0}}">&raquo;</a></li>
+                    
+                            {% endif %}
+                        </span>
+                        </ul>
+                        </div>
+  
+                  </div>             
+  
+ 
+ <div class="base-legenda ">
+     <fieldset> <legend>Leyenda:</legend>
+     <ul class="legenda">
+         <li>Conferencia: <span class="icon"> MAYÚSCULA</span></li>
+         <li>Clase Práctica:<span class="icon"> minúscula</span></li>
+         <li>Taller: <span class="icon">T</span></li>
+         <li>Seminario: <span class="icon"> S</span></li>
+         <li>Prueba Parcial:<span class="icon"> PP</span></li>
+         <li>Otras Actividades: <span class="icon">&</span></li>
+     </ul>     
+     </fieldset>
+ </div>
+ 
+ 
+ 
+ 
+  
+  
+  <!--crear y eliminar turno con modal-->
+  
+  
+<!-- Modal de  Crear turno -->
+<div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Incertar Asignatura</h4>
+      </div>
+      <form action="{% url 'crear_turno'%}" method="post">{% csrf_token%}
+      <div class="modal-body">
+          <table class="table">
+           <tr> 
+               <td>
+                <label for="asignatura">Asignatura:</label>
+                <select name="asignatura" id="lista_asignaturas" class="form-control">
+                                      
+                </select>
+                <label for="tipo">Tipo:</label>
+                
+                <select name="tipp" id="tipo" class="form-control">
+                   {%for tipo in tipos%}
+                    <option value="{{tipo.id}}">{{tipo.nombre}}</option>
+                    {%endfor%}
+                </select>
+                  
+              </td>
+               <td>
+                    <label for="turno" >Turno:</label><h5 id="turno"></h5><input  id="t" type="text" name="turnoo" class="hidden">
+                    <label for="dia">Dia:</label><h5 id="dia"></h5>
+                    <input id="diaid" name="diass" class="hidden"> 
+              </td>
+              
+         </tr>
+       </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Canselar</button>
+        <input type="submit" class="btn btn-default" value="Guardar">      </div>
+      </form>
+    </div>
+  </div>
+</div> 
+  
+  
+ 
+<!--eliminar turno-->
+<div class="modal fade" id="modaleliminarturno" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Eliminar Turno</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 style = "text-align: center" >¿Desea eliminar este turno?</h4>
+             </div>
+             <div class="modal-footer">
+                <form id = "formularioeliminar" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <input type='submit' class='btn btn-default'  value='Eliminar' class='btn btn-primary'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                </form>
+               </div>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->  
+  
+  
+  
+ 
+          
+           
+ <!-- Datos para crear tabla-->           
+ {% for object in lists %}
+  <h2 class="hidden datos" id="{{object.id}}"  name="{{object.fecha}}"></h2>
+ {%endfor%}                
+ 
+ 
+ 
+ {% block extra_js %}
+  <script>
+      jQuery(function($){
+         var con=1;
+         var aux=$("#primero");
+          var oc=document.getElementsByClassName("datos");
+         {% for object in lists %} 
+         if (con==2){
+             aux=$("#segundo");
+         }else if(con==3){
+             aux=$("#tercero");             
+         }else if(con==4){
+             aux=$("#cuarto");             
+         }else if(con==5){
+             aux=$("#quinto");             
+         }
+                  
+         
+         for (var i=1; i<=6;i++){
+             
+          
+          {% if isturno %} 
+            var br=false;
+            
+            {% for tr in turnos %} 
+                var id="{{object.id}}";
+                var id2="{{tr.id_dia.id}}";
+                var turn="{{tr.turno}}";
+                         
+                if ( parseInt(turn) == i && id == id2){
+                 var asignas="{{tr.id_asignatura.identificador}}";
+                 var tip="{{tr.id_tipo.nombre}}";
+                 var format="";
+                 if (tip=="conferencia"){format=asignas.toUpperCase();}
+                 else if(tip=="clase práctica"){format=asignas.toLowerCase();}
+                 else if(tip=="laboratorio"){format="L"+asignas.toLowerCase();}
+                 else if(tip=="seminario"){format="S"+asignas.toLowerCase();} 
+                 else if(tip=="prueba parcial"){format="PP"+asignas.toLowerCase();}
+                 else if(tip=="proyecto de curso"){format="PC"+asignas.toLowerCase();} 
+                 
+                 
+                 else if(tip=="otras actividades"){format="&"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="taller"){format="T"+asignas.toLowerCase();}
+                                   
+                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+" <a href=\"#\" style=\"color:red;\" name=\"{% url 'eliminar_turno' tr.id%}\" id=\"eliminar_turno\" ><span class=\"glyphicon glyphicon-remove\"></span></a></p></td></tr>");
+                br=true;
+                };
+            {% endfor %}
+               if(br==false){          
+                aux.append("<tr><td><a id=\"entra\" name=\""+i+"-{{object.fecha}}-{{object.id}}\" href=\"#\" class=\"btn btn-default\">Añadir</a></td></tr>");
+               } 
+         {%else%}
+         aux.append("<tr><td><a id=\"entra\" href=\"#\" name=\""+i+"-{{object.fecha}}-{{object.id}}\" class=\"btn btn-default\">Añadir</a></td></tr>");
+         {%endif%}
+         };
+         con+=1;
+         {%endfor%}
+                   
+          
+          $('#desde').attr('value',oc[0].getAttribute('name'));
+          $('#desdesiem').attr('value',oc[0].getAttribute('id'));
+          for(var h=1;h<=6;h++){
+              $('#cont').append("<tr><th style=\"font-size:24px;\"class=\"\">"+h+"</th></tr>");
+          }
+          
+          
+      });
+      
+  </script>
+  <script>
+      jQuery(function($){
+         var entrada=$('a#entra');
+         entrada.click(function(){
+            var na=$(this).attr('name').split('-');
+            
+            $('#turno').text(na[0]);
+            $('#t').attr('value',na[0]);
+            $('#dia').text(na[1]);
+            $('#diaid').attr('value',na[2]);
+            $('#nuevo').modal('show'); 
+         });
+         
+         //eliminar tuerno
+         $('a#eliminar_turno').click(function(){
+             var ac=$(this).attr('name');
+            $('#formularioeliminar').attr('action',ac);
+            $('#modaleliminarturno').modal('show');
+             
+         });
+         
+         
+          
+          
+      });
+      
+      
+  </script>
+  
+  <script>
+      jQuery(function($){
+          
+          $('#newasignatura').click(function(){
+             $('#nuevasasignaturas').modal('show');  
+          });
+          
+         
+          
+          
+          //lista de asignaturas
+       $('#asigna').attr('style','visibylity:visible');   
+       $.ajax({
+				 url:'/administracion/lista_asignaturas/{{seman.id_carrera_año.id}}',
+				 type:'GET',						
+				 data:null,
+				 success: function(data){
+                    
+                    $.each(data, function(index, objeto){
+                      $('#asignaturass').append("<li><a href=\"#\" class=\"item\">"+objeto.nombre+"("+objeto.horas+")"+"</a></li>"); 
+                      $('#lista_asignaturas').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");
+                    });                        
+                     
+                     
+                 },
+                 error: function(err){
+				alert('error'+err.error);
+			},
+       }); 
+      });
+  </script>
+  
+  <script>
+      jQuery(function($){
+          
+                 
+         //if !=null(#cambio2)
+         fecha=$('#desdesiem');         
+         $('#fechass').keyup(function(e){
+             var valor= $('#desde');            
+            if(valor.val().trim()!="" && !valor.attr('readonly') && e.key=='Enter'){
+               $.ajax({
+                   url:'/administracion/cambiarfecha/',
+                   type:'POST',                   
+                   dataType:'json',                   
+                   data:{
+                       'id_fecha_antigua':fecha.val(),
+                       'fecha_actual':valor.val(),
+                       'id_carrera_año':'{{seman.id_carrera_año.id}}',
+                       csrfmiddlewaretoken:'{{csrf_token}}',
+                   },
+                   success:function(data){
+                       alert(data.informacion);
+                       
+                   },
+                   error: function(err){
+					alert('error'+err.error);
+				},
+               });
+            } 
+         });
+         
+         
+      });
+  </script>
+ <script src="{%static 'metro/js/metro.js'%}"></script>
+ {% endblock%}
+ 
+ {% endblock %}

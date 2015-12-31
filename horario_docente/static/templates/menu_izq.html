@@ -1,0 +1,314 @@
+ 
+ 
+ <div class="menu-lateral modal-dialog" id="menu-lat">
+	
+	<div class="">
+              <input type="checkbox" id="activar" class="hidden">
+              <label for="activar" id="icono" class=""><span class="mif-menu"></span></label>
+            
+    </div> 
+
+<div class="cuerpo">
+<div class="categ">
+	CATEGORIAS
+	 <a href="#" data-toggle="modal"  data-target="#crearfacultad" class="bloque mif-files-empty fg-white"></a>
+</div>	
+{%for facu in facultad%}
+<ul >	
+	<li class="sub"><a href="#" onclick="return false;" class="items">{{facu.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
+		<ul>
+			{%for facultadcate in facultadcategoria%}
+			{%if facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'pregrado' %}
+			<li class="sub"><a href="#" onclick="return false;" class="items">Pregrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" class="glyphicon glyphicon-file nuevito" name="{{facultadcate.id}}" data-toggle="modal" data-target="#crearcarrera"></span></a> 
+			
+			<ul>
+				{%for car in carreras%}
+				{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'pregrado'%}
+							
+				<li class="sub"><a href="#" onclick="return false;"  class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul>
+											
+						<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul>
+								{%for carreraa in carrerasaño%}
+			         	        {%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
+								<li>
+									<a href="#" name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
+								</li>
+								{%endif%}
+						        {%endfor%}
+							</ul>
+						</li>
+						<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul>
+								{%for carre in carrerasaño%}
+			         	        {%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
+								<li>									
+									<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
+								</li>
+								{%endif%}
+						        {%endfor%}
+							</ul>
+						</li>
+						</ul>
+						</li>
+						{%endif%}
+						{%endfor%}
+						</ul>
+						</li>
+						{%elif facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'postgrado'%}
+									
+						<li class="sub"><a href="#" onclick="return false;" class="items">Postgrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" class="glyphicon glyphicon-file nuevito" data-toggle="modal" data-target="#crearcarrera"></span></a> 
+						
+						<ul>
+							{%for car in carreras%}
+							{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'postgrado'%}
+										
+							<li class="sub"><a href="#" onclick="return false;" class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span></a>
+								<ul>
+														
+									<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
+										<ul>
+											{%for carreraa in carrerasaño%}
+											{%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
+											<li>
+												<a href="#"  name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
+											</li>
+											{%endif%}
+											{%endfor%}
+										</ul>
+									</li>
+									<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
+										<ul>
+											{%for carre in carrerasaño%}
+											{%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
+											<li>									
+												<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
+											</li>
+											{%endif%}
+											{%endfor%}
+										</ul>
+									</li>
+						
+						</ul>
+						</li>
+												
+						{%endif%}
+						{%endfor%}
+					</ul>
+				</li>
+				
+						{%endif%}
+						{%endfor%}
+			</ul>			
+			
+			</li>		
+		</ul>
+
+{%endfor%}
+
+</div>
+ 
+</div>
+
+
+
+<!-- crear Facultad-->
+<div class="modal fade" id="crearfacultad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Nueva Facultad</h4>
+             </div>
+             
+				 <form action= "{% url 'crear_facultad' %}" method='POST' >
+                  {% csrf_token %}
+                <div id = "contenedor" class="modal-body">
+					<label for="nombre">Faculdad:</label>
+					<input type="text" required="" placeholder="facultad" id="nombre" name="nombre" class="form-control">
+					
+				</div>
+				<div class="modal-footer">
+                
+                  <input type='submit' class='btn btn-default'  value='Guardar'>
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+               
+               </div>
+			    </form>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+<!-- crear horario primera semana de horario-->
+
+ <div class="modal fade" id="horarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Crear Horario</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 id="texto" style = "text-align: center" >No hay un horario para este semestre,¿Desea Crearlo? </h4>
+             </div>
+             
+                <form id = "forh" action= "{% url 'crear_semana'%}" method='POST' >
+                  {% csrf_token %}
+			      <div class="modal-body">  
+				  <label for="nm">Fecha de inicio de la Primera semana(LUNES):</label>
+				  <input type="date" name="desde" id="nm" placeholder="2016-12-31" required="" class="form-control">
+				  <h5 class="hidden" id="oculto">La fecha incertada no es lunes</h5>
+				  
+				  <label for="cantidad">Cantidad de Semanas:</label>
+				  <input type="number" id="cantidad"name="cantidad_sem"required="" class="form-control">
+				  
+				  <input type="text" id="numero"name="numero" readonly value="1" class="hidden">
+                 <input type="text" id="anho_id" name="año" class="hidden" value="">
+				  <input type="text" name="carrera" id="carrera_id" value="" class="hidden">
+			     </div>
+			     <div class="modal-footer">
+                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+               
+			     </div>
+			    </form>
+               
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+{%include 'nueva_carrera.html'%}
+
+<script>
+         jQuery(function($){
+			 var lista=$('li.sub ul li.sub ul li.sub ul li>a.items');
+             lista.click(function(){
+               var texto= $(this).attr('name');
+			   $.ajax({
+				 url:'/administracion/issemana/',
+				 type:'GET',						
+				 data:{'id':texto},
+				 success: function(data){
+				{% if  user.is_superuser %}			 
+				if(!data.semana){				
+											
+						$.ajax({
+							//id de año>semestre
+							url:'/administracion/semes/',
+							type:'GET',						
+							data:{'id':texto},
+							success: function(data){							
+								
+								$('#anho_id').attr('value',data.año_id);
+																
+								$('#carrera_id').attr('value',data.carrera_id);
+							},
+							error: function(err){
+								alert('error'+err.error);
+							},						
+							
+						});
+							
+				
+						$('#horarios').modal('show');
+				}
+				{%endif%}
+							 
+				 	
+				 },
+				   
+			     });
+			 });	   
+			   
+				
+         });
+         
+ </script>
+
+<script>
+	jQuery(function($){
+		var contador=1;
+		$('#activar').click(function(){
+			if (contador==1){
+				$('#menu-lat').animate({
+					left:'0'
+				});
+				
+				contador=0;
+			}else{
+				$('#menu-lat').animate({
+					left:'-350px'
+				});
+				
+				contador=1;
+			}
+		});	
+		
+		
+			
+		
+		
+	});
+</script>
+
+<script>
+	jQuery(function($){
+		var nuecar=$('span#nuevac');
+		nuecar.click(function(){
+			var url="/administracion/crear_carrera/"+$(this).attr('name')+"/";
+			$('#fomunuevacarrera').attr('action',url);
+			
+			$('#modalNuevaCarrera').modal('show');//falat enviar el id
+		});
+	});
+	
+</script>
+<script>
+jQuery(function($){	
+	$('.sub').click(function(){
+		$(this).children('ul').slideToggle();
+	});
+	$('.menu-lateral ul').click(function(e){
+		e.stopPropagation();
+	});
+	$('.nuevito').click(function(e){
+		e.stopPropagation();
+	});
+});
+</script>	
+
+<script>
+	$('#nm').focusout(function(){
+	var valor=$('#nm').val();
+	
+	$.ajax({
+		 url:'/administracion/islunes/',
+		 type:'GET',						
+		 data:{'dato':valor},
+		 success: function(data){
+		 if (!data.islunes){
+			$('#nm').val('');			
+			$('#oculto').removeAttr('class') 
+			$('#oculto').attr('style','color:red') 
+			 }else{
+			$('#oculto').attr('class','hidden') 
+				 
+			 }
+		 },
+	});
+});
+</script>

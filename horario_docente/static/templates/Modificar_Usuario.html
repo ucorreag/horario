@@ -28,20 +28,7 @@
                           <input type="text" name="username" placeholder="Nombre de usuario" class="form-control entrada" required="required" value="{{ usuario.username }}"/>
                     </div>
 
-                     <div class="col-md-12"><br>
-                <label>Rol</label>
-                <select name="role" class="form-control">
-                    {% for rolevalue, rolename in roles %}
-                    
-                        {% if rolevalue == usuario.groups.get.id %}
-                           <option value="{{ rolevalue }}" selected="selected">{{ rolename }}</option>
-                        {% else %}
-                            <option value="{{ rolevalue }}">{{ rolename }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
+                     
                      <div class="col-md-12"><br>
                 <label>Contraseña</label>
                 <input type="password" name="" placeholder="Contraseña" class="form-control entrada" required="required" id="password"/><br>

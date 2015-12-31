@@ -1,0 +1,220 @@
+{% extends 'base.html'%}
+{%load staticfiles%}
+{% block content %}
+
+<div class="col-lg-9">
+ <div class="panel panel-default vista ">
+        
+    <form method="get">{% csrf_token %}
+            <table class="table">
+                <tr>
+                    <td class="sortable-column">
+                     <label for="hasta">Desde:</label>                                         
+                      <h5 id="desde" ></h5>                               
+                    
+                   </td>    
+                    
+                     <td class="sortable-column" colspan="2">
+						  <label for="carrera">Carrera:</label>
+						  <h5 id="carrera">{{seman.id_carrera.nombre}}</h5>
+					</td>	  
+                     
+                     <td class="sortable-column" ><label for="semana">N° de Semana:</label>
+					 <h5  id="semana">{{ lists.number }}</h5>
+					 </td>
+                     <td class="sortable-column"><label for="año">Año:</label>
+					 <h5  id="año"> {{seman.id_carrera_año.id_año.nombre}}</h5>
+					 </td>
+                     <td class="sortable-column"><label for="semestre">Semestre:</label>
+					 <h5  id="semestre">{{seman.id_carrera_año.id_año.id_semestre.nombre}}</h5>
+                     </td>
+                      <td class="sortable-column">
+                     <label for="hasta">Hasta:</label>                                         
+                      <h5  id="hasta"></h5>                               
+                    
+                   </td>
+                </tr> 
+                </table>
+                
+               <table class="table modal-body">
+                   <thead class="thead-inverse">                    
+                    <tr class="active" >   
+                       <th class="sortable-column">Turno</th>
+                       <th class="sortable-column">Lunes</th>
+                       <th class="sortable-column">Martes</th>
+                       <th class="sortable-column">Miércoles</th>
+                       <th class="sortable-column">Jueves</th>
+                       <th class="sortable-column">Viernes</th>
+                     </tr> 
+                     </thead>
+                     <tbody id="body">
+                        <tr>
+                            <td >
+                                <table class="table" id="cont"></table>                                
+                            </td>
+                            <td >
+                                <table class="table" id="primero"></table>  
+                            </td>
+                            <td >
+                                <table class="table" id="segundo"></table>
+                            </td>
+                            <td >
+                                 <table class="table" id="tercero"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="cuarto"></table>
+                            </td>
+                            <td >
+                                <table class="table" id="quinto"></table>
+                            </td>
+                            </tr>                                            
+                         
+                         
+                     </tbody>    
+                  </table>
+                  
+                  </form>
+                  </div>
+                   
+                        <ul class="paginador pager">
+                        <span class="step-links">
+                            {% if lists.has_previous %}
+                                <li><a  class="" href="?page={{ lists.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                            <li class="disabled"><a  class="btn" href="?page={{ 0 }}">&laquo;</a></li>
+                            {% endif %}
+                        <li> <span class="">
+                                <b> </b>  Semana {{ lists.number }} de {{ lists.paginator.num_pages }}.
+                                
+                            </span></li>
+                            {% if lists.has_next %}
+                                <li><a  class="" href="?page={{ lists.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><a  class="btn" href="?page={{0}}">&raquo;</a></li>
+                    
+                            {% endif %}
+                        </span>
+                        </ul>
+                        </div>
+  
+                  
+                  
+             <div class="col-lg-3">
+                 <fieldset>
+                     <legend>Leyenda:</legend>
+                     <div class="datos">
+                         <ul>
+                             <li>Conferencia: <span class="icon"> MAYÚSCULA</span></li>
+                            <li>Clase Práctica:<span class="icon"> minúscula</span></li>
+                            <li>Taller: <span class="icon">T</span></li>
+                            <li>Seminario: <span class="icon"> S</span></li>
+                            <li>Prueba Parcial:<span class="icon"> PP</span></li>
+                            <li>Otras Actividades: <span class="icon">&</span></li>
+                            
+                            
+                         </ul>
+                         <ul id="asignaturas_totales">
+                             
+                         </ul>
+                     </div>
+                 </fieldset>
+                 
+                 
+             </div>     
+                  
+   
+                  
+  {% for object in lists %}
+  <h2 class="hidden datos" id="{{object.id}}"  name="{{object.fecha}}"></h2>
+ {%endfor%}                   
+{%endblock%}
+{%block js%}
+<script>
+      jQuery(function($){
+         var con=1;
+         var aux=$("#primero");
+          var oc=document.getElementsByClassName("datos");
+         {% for object in lists %} 
+         if (con==2){
+             aux=$("#segundo");
+         }else if(con==3){
+             aux=$("#tercero");             
+         }else if(con==4){
+             aux=$("#cuarto");             
+         }else if(con==5){
+             aux=$("#quinto");             
+         }
+                  
+         
+         for (var i=1; i<=6;i++){
+             
+          
+          {% if isturno %} 
+            var br=false;
+            
+            {% for tr in turnos %} 
+                var id="{{object.id}}";
+                var id2="{{tr.id_dia.id}}";
+                var turn="{{tr.turno}}";
+                         
+                if ( parseInt(turn) == i && id == id2){
+                 var asignas="{{tr.id_asignatura.identificador}}";
+                 var tip="{{tr.id_tipo.nombre}}";
+                 var format="";
+                 if (tip=="conferencia"){format=asignas.toUpperCase();}
+                 else if(tip=="clase práctica"){format=asignas.toLowerCase();}
+                 else if(tip=="laboratorio"){format="L"+asignas.toLowerCase();}
+                 else if(tip=="seminario"){format="S"+asignas.toLowerCase();} 
+                 else if(tip=="prueba parcial"){format="PP"+asignas.toLowerCase();}
+                 else if(tip=="proyecto de curso"){format="PC"+asignas.toLowerCase();} 
+                 
+                 
+                 else if(tip=="otras actividades"){format="&"+asignas.charAt(0).toLowerCase();}
+                 else if(tip=="taller"){format="T"+asignas.toLowerCase();}
+                                   
+                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+"</p></td></tr>");
+                br=true;
+                };
+            {% endfor %}
+               if(br==false){          
+                aux.append("<tr><td style=\"color:red\"> Libre </td></tr>");
+               } 
+         {%else%}
+         aux.append("<tr><td style=\"color:red\"> Libre </td></tr>");
+         {%endif%}
+         };
+         con+=1;
+         {%endfor%}
+                   
+          
+          $('#desde').text(oc[1].getAttribute('name'));
+          var sa=oc.length;
+          $('#hasta').text(oc[sa-1].getAttribute('name'));
+          
+          for(var h=1;h<=6;h++){
+              $('#cont').append("<tr><th style=\"font-size:14px;\"class=\"\">"+h+"</th></tr>");
+          }
+          
+         
+         
+         $.ajax({
+				 url:'/administracion/lista_asignaturas/{{seman.id_carrera_año.id}}',
+				 type:'GET',						
+				 data:null,
+				 success: function(data){
+                    
+                    $.each(data, function(index, objeto){
+                     $('#asignaturas_totales').append('<li>'+objeto.nombre+': <span class="icon">'+ (objeto.identificador).toUpperCase() +'</span></li>');
+                    });                        
+                     
+                     
+                 },
+                 error: function(err){
+				alert('error'+err.error);
+			},
+       });
+         
+          
+      });
+  </script>    
+{%endblock%}
