@@ -20,7 +20,7 @@
      <script src="{% static 'js/jquery.form.js' %}"></script>    	
 </head>
 <body>
-      <div class="modal-header">
+      <div >
 	 {% if  user.is_superuser %}
         {%include 'planificador.html' %}
        {%else%}
@@ -32,9 +32,16 @@
                  
        {% include 'menu_izq.html'%}
        
-       <div class="modal-body"  id="contenidos">
+       <div   id="contenidos">
       {% block content %}
-      
+      <div class="bienvenida">
+            <br><br>
+            <h2>Bienvenidos a Horario Docente</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam omnis sed eligendi exercitationem illo a iste, voluptatum ratione, quis praesentium fuga quo, atque officia hic incidunt reiciendis dignissimos nisi id.</p>
+             <br>
+             <h3>Holguín - Cuba</h3>
+             <h4>Curso 2015 - 2016</h4>
+      </div>
       
       {% endblock %}
       
@@ -45,7 +52,8 @@
        {%endif%}       
       
       </div>
-      </div>      
+      </div>  
+       {% include 'footer.html'%}   
      <script src="{% static 'js/modernizr-2.0.6.min.js'%}"></script>
      <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.js' %}"></script>
      <script src="{% static 'js/script.js'%}"></script>

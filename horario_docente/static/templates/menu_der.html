@@ -1,35 +1,38 @@
- 
+ {%load staticfiles %}
  <div class="menu_derecha modal-dialog">
    <div class="">
               <input type="checkbox" id="activar-derecha" class="hidden">
-              <label for="activar-derecha" id="icono-derecha"><span class="mif-menu"></span></label>
+              <label for="activar-derecha" id="icono-derecha"><span  class="mif-menu fg-white"></span></label>
             
     </div> 
    
     <div class="cuerpos"> 
      <ul>
-         <li id="administradores">
-             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Planificadores</a><a href="#" id="newadmin" class="mif-files-empty fg-white"></a>
-             <ul id="administra">
+         <li id="administradores" class="der">
+             <a href="#" onclick="return false;" class="item cab"><span class="mif-calendar fg-white logo"></span>PLANIFICADORES <span id="newadmin" class="mif-files-empty fg-white nuevoo"></span></a>
+             <ul id="administra"  class="contenedores">
                  
              </ul>
          </li>
          
-         <li id="professors">
-             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Profesores </a><a href="#" id="newprofessor" class="mif-files-empty fg-white nuevoProfesor "></a>
-             <ul id="profesores">
+         <li id="professors" class="der">
+             <a href="#" onclick="return false;" class="item cab"><span class="mif-organization fg-white logo"></span>PROFESORES <spann id="newprofessor" class="mif-files-empty fg-white nuevoProfesor nuevoo "></spann></a>
+             <ul id="profesores"  class="contenedores">
                  
              </ul>
          </li>
-         <li id="asigna" style="visibility:hidden">
-             <a href="#" onclick="return false;" class="item"><span class="mif-organization fg-white"></span>Asignaturas </a><a href="#" id="newasignatura" class="mif-files-empty fg-white nuevaasignatura "></a>
-             <ul id="asignaturass">
+         <li id="asigna" style="visibility:hidden"  class="der">
+             <a href="#" onclick="return false;" class="item cab"><span class="mif-laptop fg-white logo"></span>ASIGNATURAS <span id="newasignatura" class="mif-files-empty fg-white nuevaasignatura nuevoo "></span> </a>
+             <ul id="asignaturass" class="contenedores">
                  
              </ul>
          </li>
      </ul>
      </div>
  </div>
+ 
+ 
+ 
  
  <!--crear planificador-->
  <div class="modal fade" id="crearplanificador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -67,7 +70,7 @@
            
                </div>
 			     <div class="modal-footer">
-                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+                  <input type='submit' class='btn btn-default'  value='Crear' class='btn btn-primary'>
 				  
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                
@@ -99,7 +102,7 @@
                
                </div>
 			     <div class="modal-footer">
-                  <input type='submit' class='btn btn-default'  value='Guardar' class='btn btn-primary'>
+                  <input type='submit' class='btn btn-default'  value='Crear' class='btn btn-primary'>
 				  
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                
@@ -159,10 +162,9 @@
 						  
 					</table>
 					</div>
-                    <div class="modal-footer">
-                        
+               <div class="modal-footer">                        
 				  
-                  <input type='submit' class='btn btn-default'  value='Guardar'>
+                  <input type='submit' class='btn btn-default'  value='Crear'>
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                 
                </div>
@@ -172,89 +174,47 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!--eliminar asignatura-->
+ <div class="modal fade" id="modalea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
+                    <h4 class="modal-title " >Eliminar</h4>
+             </div>
+             <div id = "contenedor" class="modal-body">
+               <h4 id="textoeliminarasignatura" style = "text-align: center" ></h4>
+             </div>
+             <div class="modal-footer">
+                <form id = "formularioeliminarasignatura" action= '' method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <input type='submit' class='btn btn-default'  value='Eliminar'>
+				  
+                  <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
+                </form>
+               </div>
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
  
+<script src="{%static 'js/menu_derecha.js'%}"></script>
+
 <script>
-    jQuery(function($){
-             
-       $('#newprofessor').click(function(){       
-       $('#crearprofesor').modal('show');
-       });
-       
-        $('#newadmin').click(function(){       
-       $('#crearplanificador').modal('show');
-       });
-       
-       //verificar contraseña
-       $('#repas').keyup(function(){  
-         var $pass = $('#pas').val();
-         var $repass = $('#repas').val();      
-         if($pass!=$repass){            
-         $('#message-pass-error1').attr('style','visibility: visible; color:red;'); 
-         }else{
-         $('#message-pass-error1').attr('style','visibility: hidden;'); 
-         }
-         });
-       
-       //planificadores
-       $.ajax({
-				 url:'/administracion/lista_usuarios/',
-				 type:'GET',						
-				 data:null,
-				 success: function(data){
-                    
-                    $.each(data, function(index, objeto){
-                      $('#administra').append("<li><a href=\"#\" class=\"item\">"+objeto.usuario+"("+objeto.nombre+")"+"</a></li>"); 
-                    });                        
-                     
-                     
-                 },
-                 error: function(err){
-								alert('error'+err.error);
-			},
-       });
-       
-       
-       
-       //profesores
-        $.ajax({
-				 url:'/administracion/lista_profesores/',
-				 type:'GET',						
-				 data:null,
-				 success: function(data){
-                    
-                    $.each(data, function(index, objeto){
-                      $('#profesores').append("<li><a href=\"#\"class=\"item\">"+objeto.nombre+"("+objeto.titulo+")</a></li>"); 
-                      $('#profesorrr').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");						  
-								
-                    });                        
-                     
-                     
-                 },
-                 error: function(err){
-								alert('error'+err.error);
-			},
-       });
-       
-      
-      
-      var contador=1;
-		$('#activar-derecha').click(function(){
-			if (contador==1){
-				$('.menu_derecha').animate({
-					right:'0'
-				});
+   function eliminarplanificador(e){	
+    var usuario='{{user.username}}';    
+		var aux=$(e).attr('name').split('-');    
+    if(usuario != aux[0]){
+		$('#textoeliminarasignatura').text('¿Desea eliminar el planificador '+ aux[0] + '?');
 				
-				contador=0;
-			}else{
-				$('.menu_derecha').animate({
-					right:'-350px'
-				});
-				
-				contador=1;
-			}
-		});
-      
-      
-       
-    });
+		$('#formularioeliminarasignatura').attr('action','/administracion/eliminar_usuario/'+aux[1]+'/');
+		$('#modalea').modal('show');		
+    }else{
+      alert("No de puede eliminar el planificador porque está en uso");
+    }		
+  };
+  
 </script>

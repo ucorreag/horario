@@ -56,6 +56,7 @@ input.entrada{
 	margin:0;
 	padding: 0;
 	padding-top: 2cm;
+	padding-bottom: 1.2cm;
 	position: fixed;
 	top:0;	
 	width: 400px;
@@ -69,8 +70,8 @@ input.entrada{
 
 
 #contenidos{
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: 8%;
+	margin-right: 8%;
 	margin-top:5%;
 }
 .cuerpo{
@@ -163,6 +164,7 @@ border: 1px solid gray;
 	margin:0;
 	padding: 0;
 	padding-top: 2cm;
+	padding-bottom: 1.2cm;
 	position: fixed;
 	top:0;	
 	width: 400px;
@@ -174,21 +176,45 @@ border: 1px solid gray;
 	
 	
 }
+.menu_derecha ul{
+margin: 0;
+padding: 0;		
+}
+
 .menu_derecha li{
 list-style: none;
-	
+
 }
 
 
 .menu_derecha a.item{
 	color: white;
 	text-decoration: none;
+	
+	width: 100%;
+	display: block;
+	
 }
 
-newadmin, newprofesor, newasignatura{
+.cab{
+background: rgb(120,110, 50);
+padding: 10px;
+box-shadow: 0px 2px 8px black;	
+margin-top: 2px;
+}
+#newadmin, #newprofessor, #newasignatura{
 	float: right;
 }
 
+ul.contenedores li>.item{
+	padding-left: 30px; 
+	padding-top: 10px;
+}
+
+ul.contenedores li>.item:hover{
+	background: rgb(120,110, 50); 
+	border: 1px solid gray;
+}
 #icono-derecha{
 	position: relative;
 	color:white;
@@ -201,8 +227,8 @@ newadmin, newprofesor, newasignatura{
 	 
 }
 .cuerpos{
-	width: 90%;
-	margin-left: 10%;
+	width:340px;
+	margin-left: 60px;
 	overflow:auto;
 	overflow-y:scroll;	
 	-webkit-overflow-y:-webkit-scroll;
@@ -212,11 +238,7 @@ newadmin, newprofesor, newasignatura{
 	height: 100%;
 }
 
-.nuevoProfesor{
-margin-left: 10px;
-padding: 10px;
-cursor: pointer;
-}
+
 
 
 .base-legenda{
@@ -260,8 +282,7 @@ margin: 5%;
 .vista .table{
 	width: 100%;
 }
-.menus{
-
+.menus{    
 	padding: 0;	
 }
 
@@ -269,10 +290,34 @@ margin: 5%;
 	list-style: none;
 	margin:0;
 	padding: 0;
+	width: 100%;
 }
+.menus li:hover{
+	background: rgba(120,110, 50 ,0.5);
+	
+}
+
 .menus li a{
 	text-decoration: none;
 	margin:0;
 	padding: 0;
 	color:black;	
 }
+
+.logo{
+	margin-right: 10px;
+}
+
+.eliminar-facultad, .eliminar-carrera, .eliminandoall {
+	float: right;
+	cursor: pointer;
+	margin-right: 10px;
+	padding: 5px;		
+}
+
+.footer{
+display: flex;
+align-items: center;
+justify-content: center;	
+}
+
