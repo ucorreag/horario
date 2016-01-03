@@ -84,7 +84,10 @@ def crear_carrera(request, id):
         return  HttpResponseRedirect(actual)             
 
 
-
+def eliminar_carrera(request, id):
+    car=Carrera.objects.get(id=id)
+    car.delete()
+    return HttpResponseRedirect(reverse('home'))
 
 
 @login_required
@@ -178,7 +181,18 @@ def crear_profesor(request):
        return  HttpResponseRedirect(actual)    
            
                 
-   
+@login_required
+def eliminar_profesor(request,id):
+    prof=Profesor.objects.get(id=id)
+    prof.delete()
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)  
+    
+    
+    
+    
+       
 @login_required   
 def profesor_list(request):
     users = Profesor.objects.all()
@@ -213,6 +227,7 @@ def user_list(request):
             dat={}
             dat['nombre']=us.first_name +" "+ us.last_name
             dat['usuario']=us.username
+            dat['id']=us.id
             valores.append(dat)
         
     
@@ -231,12 +246,8 @@ def cambiarPassword(request):
         usuario.password = password
         usuario.set_password(password)
         usuario.save()
-        return HttpResponseRedirect(reverse('login'))
-        
-    else:
-        
-        return render_to_response('CambiarPassword.html',context_instance = RequestContext(request))
-        
+        return HttpResponseRedirect(reverse('home'))
+            
  
 @login_required
 def lista_carreras(request):
@@ -358,9 +369,9 @@ def crear_semana(request):
             dias.save()
             fch=calendar(dy,mt,yr,1)
             cont+=1
-                
-    actual = request.META.get('HTTP_REFERER', None) or '/'
-    return  HttpResponseRedirect(actual)
+               
+    
+    return  HttpResponseRedirect('/administracion/crear_horario/'+str(carra)+'/')
      
 
 
@@ -368,30 +379,12 @@ def crear_semana(request):
 def eliminar_asignatura(request,id):
     asignatura=Asignatura.objects.get(id=id)
     asignatura.delete()
-    
-    astp=AsignaturaTipo.objects.filter(id_asignatura=asignatura.id)
-    for asp in astp:
-        asp.delete()
-        
+            
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
      
-def eliminar_carrera(request,id):
-    carrera=Carrera.objects.get(id=id)
-    carrera.delete()
-    ca=CarreraAño.objects.filter(id_carrera=id)
-    for caa in ca:
-        caa.delete()
-    
-    asig=Asignatura.objects.filter(id_carrera=id)
-    for asigna in asig:
-        eliminar_asignatura(request,asigna.id)
-    
-    actual = request.META.get('HTTP_REFERER', None) or '/'
-    return  HttpResponseRedirect(actual)              
-        
- 
-#id año        
+
+#id carreraaño        
 def crear_horario(request, id):
     smna=Semana.objects.filter(id_carrera_año=id)
     
@@ -513,7 +506,11 @@ def crear_facultad(request):
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
     
- 
+def eliminar_facultad(request, id):
+    facu=Facultad.objects.get(id=id)
+    facu.delete()
+    return HttpResponseRedirect(reverse('home'))
+     
  
 def is_semana(request):
     if request.is_ajax:
@@ -625,4 +622,8 @@ def eliminar_turno(request, id):
     
     actual = request.META.get('HTTP_REFERER', None) or '/'
     return  HttpResponseRedirect(actual)
-                
+ 
+def retornar(request):
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+                    

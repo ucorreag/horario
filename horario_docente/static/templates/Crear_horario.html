@@ -102,7 +102,7 @@
  
  <div class="base-legenda ">
      <fieldset> <legend>Leyenda:</legend>
-     <ul class="legenda">
+     <ul class="legenda" id="legendas">
          <li>Conferencia: <span class="icon"> MAYÚSCULA</span></li>
          <li>Clase Práctica:<span class="icon"> minúscula</span></li>
          <li>Taller: <span class="icon">T</span></li>
@@ -184,7 +184,7 @@
              <div class="modal-footer">
                 <form id = "formularioeliminar" action= '' method='POST' class=' form-inline botonCentrado'>
                   {% csrf_token %}
-                  <input type='submit' class='btn btn-default'  value='Eliminar' class='btn btn-primary'>
+                  <input type='submit' class='btn btn-default'  value='Eliminar' >
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                 </form>
                </div>
@@ -194,7 +194,27 @@
 </div><!-- /.modal -->  
   
   
-  
+
+<!--retornar-->
+<div class="modal fade" id="retornar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">            
+             <div style="padding:30px;">
+               <h4 style = "text-align: center" id="texto_retornar" ></h4>
+                        
+                <form  action= "{%url 'retornar'%}" method='POST' class=' form-inline botonCentrado'>
+                  {% csrf_token %}
+                  <div align="center"> 
+                  <input type='submit' class='btn btn-default'  value='Aceptar'>
+                 </div> 
+                 </form>
+               </div> 
+               
+       </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->  
+    
  
           
            
@@ -287,7 +307,7 @@
             $('#nuevo').modal('show'); 
          });
          
-         //eliminar tuerno
+         //eliminar turno
          $('a#eliminar_turno').click(function(){
              var ac=$(this).attr('name');
             $('#formularioeliminar').attr('action',ac);
@@ -295,9 +315,7 @@
              
          });
          
-         
-          
-          
+                   
       });
       
       
@@ -319,11 +337,17 @@
 				 url:'/administracion/lista_asignaturas/{{seman.id_carrera_año.id}}',
 				 type:'GET',						
 				 data:null,
-				 success: function(data){
-                    
+				 success: function(data){                    
                     $.each(data, function(index, objeto){
-                      $('#asignaturass').append("<li><a href=\"#\" class=\"item\">"+objeto.nombre+"("+objeto.horas+")"+"</a></li>"); 
+                      $('#asignaturass').append("<li><a class=\"item asignaturassss\" >" + objeto.nombre + " (" + objeto.horas +
+                       ") <span onclick=\"eliminarasigna(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.nombre +
+                        "-" + objeto.id + "\"></span></a></li>"); 
+                        
                       $('#lista_asignaturas').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");
+                      
+                      $('#legendas').append("<li>"+objeto.nombre + ": <span class=\"icon\">"+ (objeto.identificador).toUpperCase() + "</span></li>");
+                      
+                      
                     });                        
                      
                      
@@ -336,14 +360,15 @@
   </script>
   
   <script>
-      jQuery(function($){
-          
+      jQuery(function($){          
                  
          //if !=null(#cambio2)
          fecha=$('#desdesiem');         
          $('#fechass').keyup(function(e){
              var valor= $('#desde');            
             if(valor.val().trim()!="" && !valor.attr('readonly') && e.key=='Enter'){
+               $('#desde').attr('disabled','disabled');
+               $('html').attr('style','cursor:wait');
                $.ajax({
                    url:'/administracion/cambiarfecha/',
                    type:'POST',                   
@@ -355,7 +380,9 @@
                        csrfmiddlewaretoken:'{{csrf_token}}',
                    },
                    success:function(data){
-                       alert(data.informacion);
+                       
+                       $('#texto_retornar').text(data.informacion);
+                       $('#retornar').modal('show');
                        
                    },
                    error: function(err){
@@ -368,7 +395,9 @@
          
       });
   </script>
+
  <script src="{%static 'metro/js/metro.js'%}"></script>
+ 
  {% endblock%}
  
  {% endblock %}
