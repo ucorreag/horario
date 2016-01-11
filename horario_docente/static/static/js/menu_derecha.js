@@ -26,8 +26,14 @@ $('document').ready(function(){
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                      $('#administra').append("<li><a href=\"#\" class=\"item\">"+objeto.usuario+" ("+objeto.nombre+")<span onclick=\"eliminarplanificador(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.usuario +
-                        "-" + objeto.id + "\"></span></a></li>"); 
+                      $('#administra').append("<li><a href=\"#\" class=\"item\">"+objeto.usuario+" ("+objeto.nombre+" "+objeto.apellido+")<span onclick=\"eliminarplanificador(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.usuario +
+                        "-" + objeto.id + "\"></span><span class=\"mif-sync-problem actualizandoall\" onclick=\"actualizarplanificador(this);\" name=\""+objeto.id+"\"></span></a><div>"+
+						"<h5>Nombre = "+objeto.nombre+"</h5>"+
+						"<h5>Apellidos = "+objeto.apellido+"</h5>"+
+						"<h5>Usuario = "+objeto.usuario+"</h5>"+
+						"<h5>E-Mail = "+objeto.email+"</h5>"						
+						
+						+"</div></li>"); 
                     });                        
                      
                      
@@ -91,7 +97,7 @@ $('document').ready(function(){
   $('.nuevoo').click(function(e){
 		e.stopPropagation();
 	});
-   
+	
 	
 });
 
@@ -114,5 +120,35 @@ $('document').ready(function(){
 		$('#modalea').modal('show');		
 				
   };
+  
+  
+   function actualizarplanificador(e){	
+		var aux=$(e).attr('name');
+		$.ajax({
+			url:'/administracion/data_user_update/',
+		    type:'GET',						
+			data:{'id':aux},
+			success: function(data){
+				$('#crearplanificador #nombres').attr('value',data.nombre);
+				$('#crearplanificador #apellidos').attr('value',data.apellidos);
+				$('#crearplanificador #usuarios').attr('value',data.usuario);
+				$('#crearplanificador #emails').attr('value',data.email);
+			    $('#crearplanificador #creando').attr('value','Actualizar');
+			    $('#formcreandopl').attr('action','/administracion/actualizar_planificador/'+aux+'/');
+			    				
+				$('#crearplanificador').modal('show');
+				
+			},
+			 error: function(err){
+				alert('error'+err.error);
+			},	
+			
+			
+			
+		});
+			
+				
+  };
+  
   
  

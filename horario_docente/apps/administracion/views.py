@@ -123,38 +123,42 @@ def user_create(request):
 
 
 
-#Modificar Usuarios
+#datos del planificador
 @login_required
-def user_update(request,id):
+def data_user_update(request):
+    
+    id=int(request.GET['id'])
     use=User.objects.get(id=id)
-    #IMPLEMNTAR
     
-    #users = get_object_or_404(User, pk=id)
-    if request.GET:
-        username = request.GET['username']
-        first_name = request.GET['first_name']
-        last_name = request.GET['last_name']
-        password = request.GET['password']
+    datos={
+        'id':use.id,
+        'nombre':use.first_name,
+        'apellidos':use.last_name,
+        'usuario':use.username,
+        'email':use.email,
         
-        use.first_name= first_name
-        use.last_name = last_name
-        use.is_staff=True
-        use.is_superuser=True
-        use.save()
-        return HttpResponseRedirect('/administracion/lista_usuarios/')
+    } 
+    datoss=json.dumps(datos)
+    return HttpResponse(datoss, content_type="application/json")
+ 
+#actualizando planificador           
+@login_required
+def actualizar_planificador(request, id):
     
-    else:
-        return render_to_response(
-             'Modificar_Usuario.html',
-            {
-                'p': _('Actualizar Planificador ' +use.username+''),
-                'usuario':use,
-                
-                },
-            RequestContext(request)
-        )
-           
+    use=User.objects.get(id=id)
    
+    use.first_name=request.POST['first_name']
+    use.last_name=request.POST['last_name']
+    use.username=request.POST['username']
+    use.email=request.POST['email']
+    use.set_password(request.POST['password'])
+           
+    use.save();
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+    
+              
 #Eliminar Usuarios
 @login_required
 def user_delete(request,id):
@@ -225,8 +229,10 @@ def user_list(request):
     if users:
         for us in users:        
             dat={}
-            dat['nombre']=us.first_name +" "+ us.last_name
+            dat['nombre']=us.first_name
+            dat['apellido']=us.last_name
             dat['usuario']=us.username
+            dat['email']=us.email
             dat['id']=us.id
             valores.append(dat)
         

@@ -4,19 +4,7 @@ from django.db import models
 from django.contrib.auth.models import  User
 from datetime import date
 
-
-# formato 2013-2014
-class Curso(models.Model):
-	desde=models.CharField(max_length=4)
-	hasta=models.CharField(max_length=4, editable=False)
 	
-	def save(self):
-		self.hasta=int(self.desde)+1
-		super(Curso, self).save(*args, **kwargs)
-	
-	def __str__(self):
-		return 	self.desde+"|"+self.hasta
-		
 
 class Facultad(models.Model):
 	nombre=models.CharField(max_length=50)
@@ -38,9 +26,6 @@ class Carrera(models.Model):
 		return self.nombre
 
 		
-class CarreraCurso(models.Model):
-	id_curso=models.ForeignKey(Curso)
-	id_carrera=models.ForeignKey(Carrera)
 
 class Semestre(models.Model):
 	nombre=models.CharField(max_length=20)

@@ -308,16 +308,33 @@ margin: 5%;
 	margin-right: 10px;
 }
 
-.eliminar-facultad, .eliminar-carrera, .eliminandoall {
+.eliminar-facultad, .eliminar-carrera, .eliminandoall, .actualizandoall {
 	float: right;
 	cursor: pointer;
-	margin-right: 10px;
+	margin-right: 5px;
 	padding: 5px;		
 }
 
 .footer{
 display: flex;
 align-items: center;
-justify-content: center;	
+justify-content: center;
 }
+
+#administra .item ~ div{
+display: none;
+visibility: hidden;	
+z-index: 250;
+color: white;
+box-shadow: -1px 1px 10px black;
+margin-left: 5%;
+padding: 10px;
+width: 95%;
+}
+
+#administra .item:hover ~ div{
+display: inline-block;	
+visibility: visible;
+}
+
 

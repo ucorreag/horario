@@ -19,7 +19,9 @@ urlpatterns = [
     
     
     
-    url(r'actualizar_usuario/(?P<id>\d+)/$','apps.administracion.views.user_update',name='actualizar'),
+    url(r'data_user_update/$','apps.administracion.views.data_user_update'),
+    url(r'actualizar_planificador/(?P<id>\d+)/$','apps.administracion.views.actualizar_planificador',name='actualizar_planificador'),
+   
     url(r'CambiarPassword/$', 'apps.administracion.views.cambiarPassword',name='CambiarPassword'),
     url(r'crear_carrera/(?P<id>\d+)/$','apps.administracion.views.crear_carrera',name="crear_carrera"),
     url(r'lista_carreras/$','apps.administracion.views.lista_carreras', name='lista_carreras'),
