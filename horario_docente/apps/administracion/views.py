@@ -216,8 +216,29 @@ def profesor_list(request):
     
     return HttpResponse(datos, content_type="application/json")
 
+def data_profesor(request):
+    id=int(request.GET['id'])
+    profesor=Profesor.objects.get(id=id)
+    
+    dato={
+       'id':profesor.id,
+       'nombre':profesor.nombre,
+       'titulo':profesor.titulo,
+    }
+    
+    datos=json.dumps(dato)    
+    
+    return HttpResponse(datos, content_type="application/json")
 
 
+def actualizar_profesor(request, id):
+    profe=Profesor.objects.get(id=id)
+    profe.nombre=request.POST['nombre']
+    profe.titulo=request.POST['titulo']
+    profe.save()
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
 
 
 
@@ -255,12 +276,6 @@ def cambiarPassword(request):
         return HttpResponseRedirect(reverse('home'))
             
  
-@login_required
-def lista_carreras(request):
-    carreras=Carrera.objects.all()
-    
-    
-    return render_to_response('Lista_carreras.html',{'carreras':carreras},context_instance=RequestContext(request))
 
 def crear_asignatura(request):
      if request.POST:
@@ -293,6 +308,28 @@ def crear_asignatura(request):
         actual = request.META.get('HTTP_REFERER', None) or '/'
         return  HttpResponseRedirect(actual)
             
+ 
+ 
+def actualizar_asignatura(request, id):
+    asignatura=Asignatura.objects.get(id=id) 
+    asignatura.nombre=request.POST['nombre']
+    asignatura.horas=request.POST['horas']
+    asignatura.identificador=request.POST['identificador']
+    
+    id_carrera_año=request.POST['id_carrera_año']
+    id_profesor=request.POST['profesor']
+    profesor=Profesor.objects.get(id=id_profesor)
+    carrera_año=CarreraAño.objects.get(id=id_carrera_año) 
+ 
+    asignatura.id_carrera_año=carrera_año
+    asignatura.id_profesor=profesor
+    asignatura.save()
+    
+    
+    actual = request.META.get('HTTP_REFERER', None) or '/'
+    return  HttpResponseRedirect(actual)
+    
+ 
             
  #id carrera_año   
 def lista_asignaturas(request,id):
@@ -300,19 +337,34 @@ def lista_asignaturas(request,id):
     
     valores=[]
     for asignatura in asignaturas:
+        
         datos={}
         datos['nombre']=asignatura.nombre
         datos['identificador']=asignatura.identificador
         datos['horas']=asignatura.horas
         datos['id']=asignatura.id
-        
+        datos['profesor']=asignatura.id_profesor.nombre + " (" + asignatura.id_profesor.titulo + ")"
         valores.append(datos)
         
     dato=json.dumps(valores)
      
     return HttpResponse(dato, content_type="application/json")   
                     
-       
+def data_asignatura(request):
+    id=int(request.GET['id'])
+    asignatura=Asignatura.objects.get(id=id)
+    
+    dato={
+        'nombre':asignatura.nombre,
+        'identificador':asignatura.identificador,
+        'horas':asignatura.horas,
+        'profesor':asignatura.id_profesor.id
+    }
+    
+    datos=json.dumps(dato)   
+    return HttpResponse(datos, content_type="application/json")
+
+          
             
 
 def crear_semana(request):
@@ -603,12 +655,13 @@ def cambiar_fecha(request):
             dias_cambiar+=Dia.objects.filter(id_semana=sem.id)
     
        
-    resta=abs(fechaac - dia.fecha)
+    resta=fechaac - dia.fecha
     resta=resta.days    
     
     
     for d in dias_cambiar:
-        f=calendar(d.fecha.day, d.fecha.month, d.fecha.year, resta)
+        f=d.fecha + timedelta(days=resta)
+               
         print(f)
         d=Dia(id=d.id,fecha=f,id_semana=d.id_semana)
         d.save()

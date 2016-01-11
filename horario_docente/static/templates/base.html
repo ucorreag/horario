@@ -61,7 +61,18 @@
      <script src="{%static 'js/menu_derecha.js'%}"></script>
      
       {% block js %}{% endblock %} 
-     
+     <script>
+           jQuery(function($){
+                 
+            $('a.carrera').click(function(){
+		{% if not user.is_superuser %}
+		if($(this).attr('href')=='#' ){
+			alert('No tiene aun un horario creado en este año, \n conéctate con el planificador de horarios');
+		}
+            {%endif%}
+	     });   
+           });
+     </script>
       
 </body>
 </html>

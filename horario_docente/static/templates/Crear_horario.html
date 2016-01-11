@@ -325,7 +325,16 @@
       jQuery(function($){
           
           $('#newasignatura').click(function(){
-             $('#nuevasasignaturas').modal('show');  
+            $('#nuevasasignaturas h4').text('Nueva Asignatura');
+				$('#nuevasasignaturas #nombre').attr('value','');
+				$('#nuevasasignaturas #letra').attr('value','');
+				$('#nuevasasignaturas #horas').attr('value','');
+				
+				
+				$('#formulario').attr('action','/administracion/crear_asignatura/');
+			  $('#nuevasasignaturas #casig').attr('value','Crear');
+				 
+        $('#nuevasasignaturas').modal('show');  
           });
           
          
@@ -341,7 +350,13 @@
                     $.each(data, function(index, objeto){
                       $('#asignaturass').append("<li><a class=\"item asignaturassss\" >" + objeto.nombre + " (" + objeto.horas +
                        ") <span onclick=\"eliminarasigna(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.nombre +
-                        "-" + objeto.id + "\"></span></a></li>"); 
+                        "-" + objeto.id + "\"></span><span class=\"mif-sync-problem actualizandoall\" onclick=\"actualizarasignatura(this);\" name=\""+objeto.id+"\"></span></a><div>"+
+                      "<h5>Asignatura = "+objeto.nombre+"</h5>"+
+                      "<h5> Identificador= "+objeto.identificador+"</h5>"+
+                      "<h5>Profesor = "+objeto.profesor+"</h5>"+
+                      "<h5>Horas Totales = "+objeto.horas+" horas</h5>"						
+                      
+                      +"</div></li>"); 
                         
                       $('#lista_asignaturas').append("<option value=\""+objeto.id+"\">"+objeto.nombre+"</option>");
                       
@@ -365,36 +380,90 @@
          //if !=null(#cambio2)
          fecha=$('#desdesiem');         
          $('#fechass').keyup(function(e){
-             var valor= $('#desde');            
-            if(valor.val().trim()!="" && !valor.attr('readonly') && e.key=='Enter'){
-               $('#desde').attr('disabled','disabled');
-               $('html').attr('style','cursor:wait');
-               $.ajax({
-                   url:'/administracion/cambiarfecha/',
-                   type:'POST',                   
-                   dataType:'json',                   
-                   data:{
-                       'id_fecha_antigua':fecha.val(),
-                       'fecha_actual':valor.val(),
-                       'id_carrera_año':'{{seman.id_carrera_año.id}}',
-                       csrfmiddlewaretoken:'{{csrf_token}}',
-                   },
-                   success:function(data){
-                       
-                       $('#texto_retornar').text(data.informacion);
-                       $('#retornar').modal('show');
-                       
-                   },
-                   error: function(err){
-					alert('error'+err.error);
-				},
+             var valor= $('#desde');              
+             var vl=valor.val().split("-");
+             
+                        
+              if(vl[2] != null && valor.val().trim()!="" && !valor.attr('readonly') && e.key=='Enter'){
+                $.ajax({
+                url:'/administracion/islunes/',
+		            type:'GET',						
+		            data:{'dato':$('#desde').val()},  
+                  
+                success:function(data){
+                  if (data.islunes){
+                      $('#desde').attr('disabled','disabled');
+                      $('html').attr('style','cursor:wait');
+                      $.ajax({
+                          url:'/administracion/cambiarfecha/',
+                          type:'POST',                   
+                          dataType:'json',                   
+                          data:{
+                              'id_fecha_antigua':fecha.val(),
+                              'fecha_actual':valor.val(),
+                              'id_carrera_año':'{{seman.id_carrera_año.id}}',
+                              csrfmiddlewaretoken:'{{csrf_token}}',
+                          },
+                          success:function(data){
+                              
+                              $('#texto_retornar').text(data.informacion);
+                              $('#retornar').modal('show');
+                              
+                          },
+                          error: function(err){
+                  alert('error'+err.error);
+                },
                });
-            } 
+               }else{
+                  alert('no es lunes');
+               }
+                },                
+                   error: function(err){
+                  alert('no es lunes');
+                }, 
+               });   
+              } 
          });
          
          
       });
+      
+   function actualizarasignatura(e){	
+		var aux=$(e).attr('name');
+		$.ajax({
+			url:'/administracion/data_asignatura/',
+		  type:'GET',						
+			data:{'id':aux},
+			success: function(data){
+				$('#nuevasasignaturas h4').text('Actualizar Asignatura');
+				$('#nuevasasignaturas #nombre').attr('value',data.nombre);
+				$('#nuevasasignaturas #letra').attr('value',data.identificador);
+				$('#nuevasasignaturas #horas').attr('value',data.horas);
+				
+        var k=$('#nuevasasignaturas #profesorrr option');
+        for (var i=0; i<k.length;i++){
+          if (k[i].value == data.profesor)k[i].selected='selected';
+				 
+        }
+				
+				$('#formulario').attr('action','/administracion/actualizar_asignatura/'+aux+'/');
+			  $('#nuevasasignaturas #casig').attr('value','Actualizar');
+				 				
+				$('#nuevasasignaturas').modal('show');
+				
+			},
+			 error: function(err){
+				alert('error'+err.error);
+			},			
+			
+			
+		});
+			
+				
+  };
+      
   </script>
+  
 
  <script src="{%static 'metro/js/metro.js'%}"></script>
  

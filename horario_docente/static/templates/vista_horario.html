@@ -172,12 +172,12 @@
                  else if(tip=="otras actividades"){format="&"+asignas.charAt(0).toLowerCase();}
                  else if(tip=="taller"){format="T"+asignas.toLowerCase();}
                                    
-                aux.append("<tr><td><p style=\"font-size:18px;\">"+format+"</p></td></tr>");
+                aux.append("<tr><td>"+format+"</td></tr>");
                 br=true;
                 };
             {% endfor %}
                if(br==false){          
-                aux.append("<tr><td style=\"color:red\"> Libre </td></tr>");
+                aux.append("<tr><td style=\"color:rgb(120,110, 50); \"> Libre </td></tr>");
                } 
          {%else%}
          aux.append("<tr><td style=\"color:red\"> Libre </td></tr>");
@@ -196,7 +196,7 @@
           }
           
          
-         
+         //leyenda lista asiganturas
          $.ajax({
 				 url:'/administracion/lista_asignaturas/{{seman.id_carrera_año.id}}',
 				 type:'GET',						
@@ -204,7 +204,9 @@
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                     $('#asignaturas_totales').append('<li>'+objeto.nombre+': <span class="icon">'+ (objeto.identificador).toUpperCase() +'</span></li>');
+                     $('#asignaturas_totales').append('<li><h5>'+objeto.nombre
+                     +': <span class="icon">('+ (objeto.identificador).toUpperCase()
+                     +')</span> :: <i style="color:green">'+objeto.profesor+'</i></h5></li>');
                     });                        
                      
                      

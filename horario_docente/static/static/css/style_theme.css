@@ -73,7 +73,16 @@ input.entrada{
 	margin-left: 8%;
 	margin-right: 8%;
 	margin-top:5%;
+	
+	
 }
+body{
+background: url("../img/Picture1.png") repeat-y fixed;	
+	
+}
+
+
+
 .cuerpo{
 	width: 85%;
 	margin-right: 10%;
@@ -242,11 +251,11 @@ ul.contenedores li>.item:hover{
 
 
 .base-legenda{
-background: rgba(120,110, 50 ,0.9);
+background: rgba(120,110, 50 ,0.3);
 margin: 5%;	
 }
 .base-legenda fieldset{
-	background: rgba(120,110, 50 ,0.9);
+	background: rgba(120,110, 50 ,0.8);
 	
 }
 
@@ -257,7 +266,7 @@ margin: 5%;
 }
 
 .base-legenda legend{
-	background: rgb(120,110, 50);
+	background: rgba(120,110, 50,0.3);
 	text-shadow: 1px 2px 3px black;
 	color:white;
 	
@@ -321,7 +330,7 @@ align-items: center;
 justify-content: center;
 }
 
-#administra .item ~ div{
+.item ~ div{
 display: none;
 visibility: hidden;	
 z-index: 250;
@@ -332,9 +341,17 @@ padding: 10px;
 width: 95%;
 }
 
-#administra .item:hover ~ div{
+.item:hover ~ div{
 display: inline-block;	
 visibility: visible;
 }
 
+.datos ul li{
+	list-style: none;
+	
+}
 
+.datos ul li .icon{
+	color: maroon;
+	
+}

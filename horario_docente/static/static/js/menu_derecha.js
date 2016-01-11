@@ -1,9 +1,24 @@
 $('document').ready(function(){
-       $('#newprofessor').click(function(){       
+       $('#newprofessor').click(function(){ 
+		$('#crearprofesor h4').text('Crear Profesor');				
+		$('#crearprofesor #nombreprofesor').attr('value','');
+		$('#crearprofesor #titulo').attr('value','');
+		$('#crearprofesor #crearp').attr('value','Crear');				
+		$('#formcrearpro').attr('action','/administracion/crear_profesor/');
+			          
        $('#crearprofesor').modal('show');
        });
        
-        $('#newadmin').click(function(){       
+        $('#newadmin').click(function(){   
+		$('#crearplanificador h4').text('Crear Planificador');
+				
+		$('#crearplanificador #nombres').attr('value','');
+		$('#crearplanificador #apellidos').attr('value','');
+		$('#crearplanificador #usuarios').attr('value','');
+		$('#crearplanificador #emails').attr('value','');
+		$('#crearplanificador #creando').attr('value','Crear');
+		$('#formcreandopl').attr('action','/administracion/crear_usuario/');
+			   	    
        $('#crearplanificador').modal('show');
        });
        
@@ -26,7 +41,7 @@ $('document').ready(function(){
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                      $('#administra').append("<li><a href=\"#\" class=\"item\">"+objeto.usuario+" ("+objeto.nombre+" "+objeto.apellido+")<span onclick=\"eliminarplanificador(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.usuario +
+                      $('#administra').append("<li><a class=\"item\">"+objeto.usuario+" ("+objeto.nombre+" "+objeto.apellido+")<span onclick=\"eliminarplanificador(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.usuario +
                         "-" + objeto.id + "\"></span><span class=\"mif-sync-problem actualizandoall\" onclick=\"actualizarplanificador(this);\" name=\""+objeto.id+"\"></span></a><div>"+
 						"<h5>Nombre = "+objeto.nombre+"</h5>"+
 						"<h5>Apellidos = "+objeto.apellido+"</h5>"+
@@ -53,8 +68,12 @@ $('document').ready(function(){
 				 success: function(data){
                     
                     $.each(data, function(index, objeto){
-                      $('#profesores').append("<li><a href=\"#\"class=\"item\">"+objeto.nombre+" ("+objeto.titulo+") <span onclick=\"eliminarprof(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.nombre +
-                        "-" + objeto.id + "\"></span></a></li>"); 
+                      $('#profesores').append("<li><a class=\"item\">"+objeto.nombre+" ("+objeto.titulo+") <span onclick=\"eliminarprof(this);\" class=\"mif-minus fg-white eliminandoall\" name=\"" + objeto.nombre +
+                        "-" + objeto.id + "\"></span><span class=\"mif-sync-problem actualizandoall\" onclick=\"actualizarprofesor(this);\" name=\""+objeto.id+"\"></span></a><div>"+
+						"<h5>Nombre = "+objeto.nombre+"</h5>"+
+						"<h5>Titulo = "+objeto.titulo+"</h5>"											
+						
+						+"</div></li>"); 
                       $('#profesorrr').append("<option value=\""+objeto.id+"\">"+objeto.nombre+" ("+objeto.titulo+")</option>");						  
 								
                     });                        
@@ -121,7 +140,7 @@ $('document').ready(function(){
 				
   };
   
-  
+  //actualizar planificador
    function actualizarplanificador(e){	
 		var aux=$(e).attr('name');
 		$.ajax({
@@ -129,6 +148,8 @@ $('document').ready(function(){
 		    type:'GET',						
 			data:{'id':aux},
 			success: function(data){
+				$('#crearplanificador h4').text('Actualizar Planificador');
+				
 				$('#crearplanificador #nombres').attr('value',data.nombre);
 				$('#crearplanificador #apellidos').attr('value',data.apellidos);
 				$('#crearplanificador #usuarios').attr('value',data.usuario);
@@ -141,8 +162,35 @@ $('document').ready(function(){
 			},
 			 error: function(err){
 				alert('error'+err.error);
-			},	
+			},			
 			
+			
+		});
+			
+				
+  };
+  
+    function actualizarprofesor(e){	
+		var aux=$(e).attr('name');
+		$.ajax({
+			url:'/administracion/data_profesor/',
+		    type:'GET',						
+			data:{'id':aux},
+			success: function(data){
+				$('#crearprofesor h4').text('Actualizar Profesor');
+				
+				$('#crearprofesor #nombreprofesor').attr('value',data.nombre);
+				$('#crearprofesor #titulo').attr('value',data.titulo);
+				$('#crearprofesor #crearp').attr('value','Actualizar');
+				
+				$('#formcrearpro').attr('action','/administracion/actualizar_profesor/'+aux+'/');
+			    				
+				$('#crearprofesor').modal('show');
+				
+			},
+			 error: function(err){
+				alert('error'+err.error);
+			},			
 			
 			
 		});

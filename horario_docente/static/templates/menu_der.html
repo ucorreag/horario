@@ -93,16 +93,16 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hiden="true">&times;</span></button>
                     <h4 class="modal-title " >Crear Profesor</h4>
              </div>
-             <form action="{%url 'crear_profesor'%}" method="POST">{%csrf_token%}
+             <form id="formcrearpro" action="{%url 'crear_profesor'%}" method="POST">{%csrf_token%}
                <div id = "contenedor" class="modal-body">
-                   <label for="nombre">Nombre y Apellidos</label>
-                   <input type="text" class="form-control" id="nombre" name="nombre">
+                   <label for="nombreprofesor">Nombre y Apellidos</label>
+                   <input type="text" class="form-control" id="nombreprofesor" name="nombre">
                    <label for="titulo">Titulo</label>
                    <input type="text" class="form-control" id="titulo" name="titulo">
                
                </div>
 			     <div class="modal-footer">
-                  <input type='submit' class='btn btn-default'  value='Crear' class='btn btn-primary'>
+                  <input type='submit' id="crearp" class='btn btn-default'  value='Crear' class='btn btn-primary'>
 				  
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                
@@ -164,7 +164,7 @@
 					</div>
                <div class="modal-footer">                        
 				  
-                  <input type='submit' class='btn btn-default'  value='Crear'>
+                  <input type='submit' id="casig" class='btn btn-default'  value='Crear'>
                   <input type='button'  class='btn btn-default' value='Cancelar' data-dismiss='modal'>
                 
                </div>

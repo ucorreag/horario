@@ -20,7 +20,24 @@ function carreras(){
 		
 		   });
 	});
+	
+		$.ajax({
+				 url:'/horario/periodo/',
+				 type:'GET',			 
+				 success: function(data){
+				 $('#d').text(data.de);
+				 $('#a').text(data.as);
+				},
+				error: function(err){
+								alert('error'+err.error);
+							},
+		
+		   });
+	
+	
  }
+
+
 
 
 				 
