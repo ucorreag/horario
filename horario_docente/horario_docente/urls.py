@@ -19,12 +19,15 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from apps.administracion import urls as adninistracion_urls
+from apps.horario import urls as horario_urls
+
 
 urlpatterns = [
     
     url(r'^$','horario_docente.views.index_view',name="home"),
     
     url(r'^administracion/', include(adninistracion_urls)),
+    url(r'^horario/', include(horario_urls)),
     
     
     

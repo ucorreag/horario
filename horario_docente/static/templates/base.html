@@ -3,7 +3,8 @@
 <html lang="esp">
 <head>
 	<meta charset="UTF-8">
-	<title></title>
+	<title>Horario Docente :: {%block title%}Home{%endblock%}</title>
+      <link rel="shortcut icon" href="{%static 'img/favicon.png'%}" type="image/x-icon"/>
 	
 	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
       <link href="{% static 'bootstrap-3.3.6-dist/css/bootstrap.css' %}" rel="stylesheet">
@@ -37,10 +38,10 @@
       <div class="bienvenida">
             <br><br>
             <h2>Bienvenidos a Horario Docente</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam omnis sed eligendi exercitationem illo a iste, voluptatum ratione, quis praesentium fuga quo, atque officia hic incidunt reiciendis dignissimos nisi id.</p>
+            <p></p>
              <br>
              <h3>Holguín - Cuba</h3>
-             <h4>Curso 2015 - 2016</h4>
+             <h4>Curso <span id="de"></span> - <span id="as"></span></h4>
       </div>
       
       {% endblock %}
@@ -58,9 +59,21 @@
      <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.js' %}"></script>
      <script src="{% static 'js/script.js'%}"></script>
      <script src="{%static 'metro/js/metro.js'%}"></script>
+     <script src="{%static 'js/menu_derecha.js'%}"></script>
      
       {% block js %}{% endblock %} 
-     
+     <script>
+           jQuery(function($){
+                 
+            $('a.carrera').click(function(){
+		{% if not user.is_superuser %}
+		if($(this).attr('href')=='#' ){
+			alert('No tiene aun un horario creado en este año, \n conéctate con el planificador de horarios');
+		}
+            {%endif%}
+	     });   
+           });
+     </script>
       
 </body>
 </html>

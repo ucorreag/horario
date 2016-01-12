@@ -170,10 +170,10 @@
 }
 
 .navbar-inverse {
-  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#ffe), to(#650));
-  background-image: -webkit-linear-gradient(top, #ffe, 0%, #650, 100%);
+  background-image: -webkit-gradient(linear, left 0%, right 100%, from(#ffe), to(#650));
+  background-image: -webkit-linear-gradient(left, #ffe, 0%, #650, 100%);
   background-image: -moz-linear-gradient(left, #ffe 0%, #650 100%);
-  background-image: -gradient(to bottom, #ffe 0%, #650 100%);
+  background-image: -gradient(to right, #ffe 0%, #650 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
 }
