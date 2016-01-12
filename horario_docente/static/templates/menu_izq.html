@@ -18,12 +18,13 @@
 	<li class="sub"><a href="#" onclick="return false;" class="items">{{facu.nombre}} <span class="glyphicon glyphicon-chevron-down"></span><span class="mif-minus fg-white eliminar-facultad ocultar" name="{{facu.nombre}}-{{facu.id}}"></span></a>
 		<ul>
 			{%for facultadcate in facultadcategoria%}
-			{%if facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'pregrado' %}
+			
+			{%if facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'Pregrado' %}
 			<li class="sub"><a href="#" onclick="return false;" class="items">Pregrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" class="glyphicon glyphicon-file nuevito ocultar" name="{{facultadcate.id}}" data-toggle="modal" data-target="#crearcarrera"></span></a> 
 			
 			<ul>
 				{%for car in carreras%}
-				{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'pregrado'%}
+				{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'Pregrado'%}
 							
 				<li class="sub"><a href="#" onclick="return false;"  class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span><span class="mif-minus fg-white eliminar-carrera ocultar" name="{{car.nombre}}-{{car.id}}"></span></a>
 					<ul>
@@ -31,7 +32,7 @@
 						<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
 							<ul>
 								{%for carreraa in carrerasaño%}
-			         	        {%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
+			         	        {%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'Primero'%}
 								<li>
 									<a href="#" name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
 								</li>
@@ -42,7 +43,7 @@
 						<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
 							<ul>
 								{%for carre in carrerasaño%}
-			         	        {%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
+			         	        {%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'Segundo' %}
 								<li>									
 									<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
 								</li>
@@ -56,13 +57,13 @@
 						{%endfor%}
 						</ul>
 						</li>
-						{%elif facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'postgrado'%}
+						{%elif facultadcate.id_facultad.id == facu.id and facultadcate.id_categoria.nombre == 'Postgrado'%}
 									
 						<li class="sub"><a href="#" onclick="return false;" class="items">Postgrado <span class="glyphicon glyphicon-chevron-down"></span> <span id="nuevac" name="{{facultadcate.id}}" class="glyphicon glyphicon-file nuevito ocultar" data-toggle="modal" data-target="#crearcarrera"></span></a> 
 						
 						<ul>
 							{%for car in carreras%}
-							{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'postgrado'%}
+							{%if car.id_facultad_categoria.id_facultad.id == facu.id and car.id_facultad_categoria.id_categoria.nombre == 'Postgrado'%}
 										
 							<li class="sub"><a href="#" onclick="return false;" class="items">{{car.nombre}}<span class="glyphicon glyphicon-chevron-down"></span><span class="mif-minus fg-white eliminar-carrera ocultar" name="{{car.nombre}}-{{car.id}}"></span> </a>
 								<ul>
@@ -70,7 +71,7 @@
 									<li class="sub"><a href="#" onclick="return false;" class="items">Primer semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
 										<ul>
 											{%for carreraa in carrerasaño%}
-											{%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'primero'%}
+											{%if carreraa.id_carrera.id == car.id and carreraa.id_año.id_semestre.nombre == 'Primero'%}
 											<li>
 												<a href="#"  name="{{carreraa.id}}" class="items carrera">{{carreraa.id_año.nombre}}</a>
 											</li>
@@ -81,7 +82,7 @@
 									<li class="sub"><a href="#" onclick="return false;" class="items">Segundo semestre<span class="glyphicon glyphicon-chevron-down"></span></a>
 										<ul>
 											{%for carre in carrerasaño%}
-											{%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'segundo' %}
+											{%if carre.id_carrera.id == car.id and carre.id_año.id_semestre.nombre == 'Segundo' %}
 											<li>									
 												<a href="#" name="{{carre.id}}" class="items carrera">{{carre.id_año.nombre}}</a>
 											</li>
